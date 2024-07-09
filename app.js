@@ -19,7 +19,9 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     console.log('MongoDB Connection error', err);
   });
 
-app.use(cors());
+  app.use(cors({
+    origin: 'https://qrapid-final.vercel.app'  // Or use '*' to allow all domains
+}));
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);

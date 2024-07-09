@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
 
   app.use(cors({
-    origin: 'https://qrapid-final.vercel.app'  // Or use '*' to allow all domains
+    origin: 'https://frontend1-sand.vercel.app/'  // Or use '*' to allow all domains
 }));
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

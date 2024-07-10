@@ -12,7 +12,7 @@ require('dotenv').config();
 const app = express();
 const allowedOrigins = ['https://digitalmenu-rouge.vercel.app'];
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('MongoDB Connected');
   })

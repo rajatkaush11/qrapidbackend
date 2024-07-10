@@ -31,7 +31,6 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     credentials: true,
   }));
 app.use(bodyParser.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);
 app.use(restaurantRouter);
 app.use(categoryRouter);

@@ -15,10 +15,6 @@ const itemSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    image: {
-        type: String,
-        required: false  // Set to false if image is optional
-    },
     weight: {
         type: Number,
         required: false  // Set to false if weight is optional

@@ -10,7 +10,7 @@ const itemRouter = require('./routers/item.router');
 require('dotenv').config();
 
 const app = express();
-const allowedOrigins = ['https://frontend1-sand.vercel.app'];
+const allowedOrigins = ['https://digitalmenu-rouge.vercel.app'];
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {

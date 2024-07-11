@@ -35,7 +35,7 @@ exports.login = async (req, res, next) => {
         }
 
         let tokenData = { _id: user._id, email: user.email };
-        const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");
+        const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "1h");
 
         console.log('Generated Token:', token); // Log the token to the console
 

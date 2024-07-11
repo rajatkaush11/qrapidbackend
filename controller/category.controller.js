@@ -8,9 +8,11 @@ const createCategory = async (req, res) => {
     }
     try {
         const category = new CategoryModel({ name, restaurant: restaurantId });
-        await category.save();
-        res.status(201).send(category);
-    } catch (error) {
+        await category.save();  
+    const tokenData = { _id: category._id };  
+    const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");  
+    res.status(201).send({ category, token });  
+  } catch (error) {
         res.status(500).send({ error: 'Error creating category' });
     }
 };

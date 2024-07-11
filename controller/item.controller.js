@@ -32,6 +32,7 @@ const createItem = async (req, res) => {
             price,
             description,
             category: categoryId,
+            image,  // Optional image
             weight,
             unit
         });

@@ -39,10 +39,10 @@ const createItem = async (req, res) => {
 
         console.debug('Saving new item:', item);
         await item.save();  
-    const tokenData = { _id: item._id };  
-    const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");  
-    res.status(201).send({ item, token });  
-  } catch (error) {
+        const tokenData = { _id: item._id };  
+        const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");  
+        res.status(201).send({ item, token });  
+    } catch (error) {
         console.error("Failed to create item:", error);
         res.status(500).send({ error: 'Error creating item' });
     }

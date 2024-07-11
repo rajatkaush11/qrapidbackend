@@ -13,11 +13,9 @@ const createRestaurant = async (req, res) => {
             owner: req.user._id
         });
 
-        await restaurant.save();  
-        const tokenData = { _id: restaurant._id };  
-        const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");  
-        res.status(201).send({ restaurant, token });  
-    }catch (error) {
+        await restaurant.save();
+        res.status(201).send(restaurant);
+    } catch (error) {
         res.status(400).send({ error: 'Error creating restaurant' });
     }
 };

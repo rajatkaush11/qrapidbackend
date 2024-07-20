@@ -27,7 +27,8 @@ exports.login = async (req, res, next) => {
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) throw new Error('Username or Password does not match');
 
-    const session = await sessions.createSession({ emailAddress: email, password: password });
+    // Use Clerk to create a session
+    const session = await sessions.create({ email, password });
     const tokenData = { _id: user._id, email: user.email, sessionId: session.id };
     const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
 

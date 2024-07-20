@@ -1,5 +1,4 @@
 const UserServices = require('../services/user.services');
-const { sessions } = require('@clerk/clerk-sdk-node');
 const UserModel = require('../model/user.model');
 
 exports.register = async (req, res, next) => {
@@ -8,8 +7,14 @@ exports.register = async (req, res, next) => {
     const duplicate = await UserServices.getUserByEmail(email);
     if (duplicate) throw new Error(`User ${email} already registered`);
 
-    await UserServices.registerUser(email, password);
-    res.status(201).json({ status: true, success: 'User registered successfully' });
+    const user = await UserServices.registerUser(email, password);
+    const tokenData = { _id: user._id, email: user.email };
+    const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
+
+    user.token = token;
+    await user.save();
+
+    res.status(201).json({ status: true, success: 'User registered successfully', token });
   } catch (err) {
     console.error(err);
     next(err);
@@ -27,15 +32,13 @@ exports.login = async (req, res, next) => {
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) throw new Error('Username or Password does not match');
 
-    // Use Clerk to create a session
-    const session = await sessions.create({ email, password });
-    const tokenData = { _id: user._id, email: user.email, sessionId: session.id };
+    const tokenData = { _id: user._id, email: user.email };
     const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
 
     user.token = token;
     await user.save();
 
-    res.status(200).json({ status: true, success: 'Login successful', token, clerkSession: session });
+    res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {
     console.error(error);
     next(error);

@@ -6,11 +6,15 @@ const authenticate = async (req, res, next) => {
     const clientId = req.header('Authorization').replace('Bearer ', '');
     console.log('ClientId:', clientId); // Log clientId
 
+    if (!clientId) {
+      return res.status(401).send({ error: 'Not authenticated' });
+    }
+
     const user = await UserModel.findOne({ clerkId: clientId });
     console.log('User:', user); // Log user
 
     if (!user) {
-      throw new Error('User not found');
+      return res.status(401).send({ error: 'User not found' });
     }
 
     req.user = user;

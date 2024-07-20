@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { sessions } = require("@clerk/clerk-sdk-node");
+const { Clerk } = require('@clerk/clerk-sdk-node');
+
+const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
 
 const authenticate = async (req, res, next) => {
   const authHeader = req.header('Authorization');
@@ -12,7 +14,7 @@ const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const session = await sessions.get(decoded.sessionId);
+    const session = await clerk.sessions.getSession(decoded.sessionId);
     if (!session) {
       throw new Error('Invalid Clerk session');
     }

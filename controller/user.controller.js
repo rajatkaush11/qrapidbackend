@@ -1,6 +1,8 @@
 const UserServices = require('../services/user.services');
 const UserModel = require('../model/user.model');
-const { sessions } = require("@clerk/clerk-sdk-node");
+const { Clerk } = require('@clerk/clerk-sdk-node');
+
+const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
 
 exports.register = async (req, res, next) => {
   try {
@@ -35,18 +37,18 @@ exports.login = async (req, res, next) => {
       throw new Error('Username or Password does not match');
     }
 
-    const session = await sessions.create({
+    const session = await clerk.sessions.createSession({
       emailAddress: email,
       password: password,
     });
 
     let tokenData = { _id: user._id, email: user.email, sessionId: session.id };
-    const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");
+    const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
 
     user.token = token;
     await user.save();
 
-    res.status(200).json({ status: true, success: "Login successful", token: token, clerkSession: session });
+    res.status(200).json({ status: true, success: 'Login successful', token: token, clerkSession: session });
   } catch (error) {
     console.log(error);
     next(error);

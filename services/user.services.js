@@ -25,7 +25,7 @@ class UserServices {
       user = new UserModel({ email, isGoogleUser: true }); // Indicate Google user
       await user.save();
     }
-    const tokenData = { _id: user._id, email: user.email, clientId: user.clerkId }; // Include clientId in token
+    const tokenData = { _id: user._id, email: user.email };
     const token = await this.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
     user.token = token;
     await user.save();

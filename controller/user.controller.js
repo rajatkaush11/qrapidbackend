@@ -1,3 +1,4 @@
+// controller/user.controller.js
 const UserServices = require('../services/user.services');
 const UserModel = require('../model/user.model');
 

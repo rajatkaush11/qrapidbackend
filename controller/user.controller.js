@@ -1,5 +1,6 @@
 const UserServices = require('../services/user.services');
 const { sessions } = require('@clerk/clerk-sdk-node');
+const UserModel = require('../model/user.model'); // Ensure UserModel is imported
 
 exports.register = async (req, res, next) => {
   try {

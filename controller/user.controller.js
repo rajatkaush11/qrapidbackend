@@ -66,3 +66,21 @@ exports.getUsers = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.createOrUpdateUser = async (req, res, next) => {
+  try {
+    const { email, clerkId } = req.body;
+
+    let user = await UserServices.getUserByEmail(email);
+    if (!user) {
+      user = new UserModel({ email, clerkId });
+    } else {
+      user.clerkId = clerkId;
+    }
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};

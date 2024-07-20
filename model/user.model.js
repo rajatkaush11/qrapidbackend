@@ -16,6 +16,9 @@ const userSchema = new Schema({
   token: {
     type: String,
   },
+  clerkId: {
+    type: String,
+  },
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {

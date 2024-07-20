@@ -1,3 +1,4 @@
+// controller/restaurant.controller.js
 const RestaurantModel = require('../model/restaurant.model');
 
 const createRestaurant = async (req, res) => {

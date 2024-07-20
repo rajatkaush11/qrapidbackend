@@ -7,7 +7,7 @@ const authenticate = async (req, res, next) => {
     console.log('ClientId:', clientId); // Log clientId
 
     if (!clientId) {
-      return res.status(401).send({ error: 'Not authenticated' });
+      return res.status(401).send({ error: 'Not authenticated - No ClientId' });
     }
 
     const user = await UserModel.findOne({ clerkId: clientId });

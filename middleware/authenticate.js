@@ -11,9 +11,11 @@ const authenticate = (req, res, next) => {
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
+    req.user.clientId = verified.clientId; // Add clientId to req.user
     next();
   } catch (error) {
     res.status(400).json({ error: 'Invalid token' });
   }
 };
+
 module.exports = authenticate;

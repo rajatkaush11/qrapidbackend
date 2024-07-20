@@ -30,7 +30,7 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // Public routes
-app.use('/users', userRouter);
+app.use(userRouter);
 
 // Protected routes
 app.use('/restaurants', authenticate, restaurantRouter);

@@ -1,4 +1,3 @@
-// controllers/restaurant.controller.js
 const RestaurantModel = require('../model/restaurant.model');
 
 const createRestaurant = async (req, res) => {
@@ -6,6 +5,7 @@ const createRestaurant = async (req, res) => {
     const { name, address, description, timing } = req.body;
     const clerkId = req.user.clerkId;
 
+    // Check if the restaurant already exists for the user
     const existingRestaurant = await RestaurantModel.findOne({ clerkId });
     if (existingRestaurant) {
       return res.status(400).send({ error: 'Restaurant already exists for this user' });
@@ -21,7 +21,7 @@ const createRestaurant = async (req, res) => {
 
     await restaurant.save();
 
-    console.log('Restaurant created:', restaurant);
+    console.log('Restaurant created:', restaurant); // Log restaurant details
 
     res.status(201).send(restaurant);
   } catch (error) {
@@ -37,7 +37,7 @@ const getRestaurantByUser = async (req, res) => {
       return res.status(404).send({ error: 'Restaurant not found' });
     }
 
-    console.log('Restaurant details:', restaurant);
+    console.log('Restaurant details:', restaurant); // Log restaurant details
 
     res.status(200).send(restaurant);
   } catch (error) {

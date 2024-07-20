@@ -25,6 +25,11 @@ const restaurantSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
+    },
+    clientid: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Client'
     }
 }, {
     timestamps: true

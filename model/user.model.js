@@ -1,7 +1,3 @@
-const mongoose = require('mongoose');
-const bcryptjs = require('bcryptjs');
-const { Schema } = mongoose;
-
 const userSchema = new Schema({
   email: {
     type: String,
@@ -11,7 +7,7 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function () { return !this.isGoogleUser; } // Conditional required
   },
   token: {
     type: String,
@@ -19,18 +15,15 @@ const userSchema = new Schema({
   clerkId: {
     type: String,
   },
+  isGoogleUser: {
+    type: Boolean,
+    default: false,
+  }
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {
-  if (!this.isModified('password')) return;
+  if (!this.isModified('password') || !this.password) return;
   const salt = await bcryptjs.genSalt(10);
   const hash = await bcryptjs.hash(this.password, salt);
   this.password = hash;
 });
-
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return bcryptjs.compare(candidatePassword, this.password);
-};
-
-const UserModel = mongoose.model('User', userSchema);
-module.exports = UserModel;

@@ -1,5 +1,5 @@
 const UserServices = require('../services/user.services');
-const UserModel = require('../model/user.model'); // Add this line to import UserModel
+const UserModel = require('../model/user.model'); // Ensure UserModel is imported
 
 exports.register = async (req, res, next) => {
   try {

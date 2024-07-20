@@ -26,8 +26,7 @@ app.use(bodyParser.json());
 app.use(userRouter);
 
 // Protected routes
-app.use(authenticate); // All routes below this will require authentication
-app.use(restaurantRouter);
+app.use('/restaurants', authenticate, restaurantRouter); // Apply authentication middleware here
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

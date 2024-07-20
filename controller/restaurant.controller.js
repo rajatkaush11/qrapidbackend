@@ -1,9 +1,14 @@
 const RestaurantModel = require('../model/restaurant.model');
+const ClientModel = require('../model/client.model'); // Assuming you have a Client model
 
 const createRestaurant = async (req, res) => {
   try {
-    const { name, address, description, timing, clientid } = req.body;
+    const { name, address, description, timing } = req.body;
     const owner = req.user._id;
+
+    // Automatically create a new Client ID
+    const client = new ClientModel(); 
+    await client.save();
 
     const restaurant = new RestaurantModel({
       name,
@@ -11,7 +16,7 @@ const createRestaurant = async (req, res) => {
       description,
       timing,
       owner,
-      clientid,
+      clientid: client._id,
     });
 
     await restaurant.save();

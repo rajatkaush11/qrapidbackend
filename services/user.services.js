@@ -1,5 +1,6 @@
 // services/user.services.js
 const UserModel = require('../model/user.model');
+const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 
 class UserServices {
@@ -16,8 +17,11 @@ class UserServices {
     return UserModel.findOne({ email });
   }
 
-  static async getUserByClientId(clientId) {
-    return UserModel.findOne({ clerkId: clientId });
+  static async generateAccessToken(user) {
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '2w' });
+    user.tokens = user.tokens.concat({ token });
+    await user.save();
+    return token;
   }
 
   static async registerOrLoginGoogleUser(email) {
@@ -26,9 +30,8 @@ class UserServices {
       user = new UserModel({ email, isGoogleUser: true }); // Indicate Google user
       await user.save();
     }
-    user.clerkId = user._id; // Assuming clerkId is same as user._id
-    await user.save();
-    return user;
+    const token = await this.generateAccessToken(user);
+    return { user, token };
   }
 }
 

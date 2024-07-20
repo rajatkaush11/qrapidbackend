@@ -15,12 +15,11 @@ exports.register = async (req, res, next) => {
     }
 
     const user = await UserServices.registerUser(email, password);
-    user.clerkId = user._id; // Assuming clerkId is same as user._id
-    await user.save();
+    const token = await UserServices.generateAccessToken(user);
 
     console.log('User registered:', user); // Log user details
 
-    res.status(201).json({ status: true, success: 'User registered successfully', clerkId: user.clerkId });
+    res.status(201).json({ status: true, success: 'User registered successfully', token });
   } catch (err) {
     console.error(err);
     next(err);
@@ -44,9 +43,11 @@ exports.login = async (req, res, next) => {
       throw new Error('Username or Password does not match');
     }
 
+    const token = await UserServices.generateAccessToken(user);
+
     console.log('User logged in:', user); // Log user details
 
-    res.status(200).json({ status: true, success: 'Login successful', clerkId: user.clerkId });
+    res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {
     console.error(error);
     next(error);
@@ -60,11 +61,11 @@ exports.googleLogin = async (req, res, next) => {
       throw new Error('Email is required');
     }
 
-    const user = await UserServices.registerOrLoginGoogleUser(email);
+    const { user, token } = await UserServices.registerOrLoginGoogleUser(email);
 
     console.log('User logged in with Google:', user); // Log user details
 
-    res.status(200).json({ status: true, success: 'Login successful', clerkId: user.clerkId });
+    res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {
     console.error(error);
     next(error);

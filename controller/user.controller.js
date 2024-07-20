@@ -14,6 +14,9 @@ exports.register = async (req, res, next) => {
     user.token = token;
     await user.save();
 
+    console.log('User registered:', user); // Log user details
+    console.log('Token:', token); // Log token
+
     res.status(201).json({ status: true, success: 'User registered successfully', token });
   } catch (err) {
     console.error(err);
@@ -37,6 +40,9 @@ exports.login = async (req, res, next) => {
 
     user.token = token;
     await user.save();
+
+    console.log('User logged in:', user); // Log user details
+    console.log('Token:', token); // Log token
 
     res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {

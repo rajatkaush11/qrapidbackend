@@ -1,14 +1,9 @@
 const RestaurantModel = require('../model/restaurant.model');
-const ClientModel = require('../model/client.model'); // Assuming you have a Client model
 
 const createRestaurant = async (req, res) => {
   try {
     const { name, address, description, timing } = req.body;
-    const owner = req.user.id; // Adjust this based on how Clerk provides the user ID
-
-    // Automatically create a new Client ID
-    const client = new ClientModel(); 
-    await client.save();
+    const owner = req.user._id;
 
     const restaurant = new RestaurantModel({
       name,
@@ -16,7 +11,6 @@ const createRestaurant = async (req, res) => {
       description,
       timing,
       owner,
-      clientid: client._id,
     });
 
     await restaurant.save();
@@ -32,7 +26,7 @@ const createRestaurant = async (req, res) => {
 
 const getRestaurantByUser = async (req, res) => {
   try {
-    const restaurant = await RestaurantModel.findOne({ owner: req.user.id }); // Adjust this based on how Clerk provides the user ID
+    const restaurant = await RestaurantModel.findOne({ owner: req.user._id });
     if (!restaurant) {
       return res.status(404).send({ error: 'Restaurant not found' });
     }

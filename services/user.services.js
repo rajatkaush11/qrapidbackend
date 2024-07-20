@@ -1,7 +1,5 @@
-// services/user.services.js
 const UserModel = require('../model/user.model');
 const jwt = require('jsonwebtoken');
-const bcryptjs = require('bcryptjs');
 
 class UserServices {
   static async registerUser(email, password) {
@@ -17,11 +15,8 @@ class UserServices {
     return UserModel.findOne({ email });
   }
 
-  static async generateAccessToken(user) {
-    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '2w' });
-    user.tokens = user.tokens.concat({ token });
-    await user.save();
-    return token;
+  static async generateAccessToken(tokenData, JWTSecret_Key, JWT_EXPIRE) {
+    return jwt.sign(tokenData, JWTSecret_Key, { expiresIn: JWT_EXPIRE });
   }
 
   static async registerOrLoginGoogleUser(email) {
@@ -30,7 +25,10 @@ class UserServices {
       user = new UserModel({ email, isGoogleUser: true }); // Indicate Google user
       await user.save();
     }
-    const token = await this.generateAccessToken(user);
+    const tokenData = { _id: user._id, email: user.email };
+    const token = await this.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
+    user.token = token;
+    await user.save();
     return { user, token };
   }
 }

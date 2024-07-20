@@ -1,4 +1,3 @@
-// server.js or app.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -34,7 +33,7 @@ app.use(bodyParser.json());
 app.use(userRouter);
 
 // Protected routes
-app.use(authenticate, restaurantRouter);
+app.use('/restaurants', authenticate, restaurantRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

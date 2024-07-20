@@ -47,7 +47,7 @@ exports.login = async (req, res, next) => {
       throw new Error('Username or Password does not match');
     }
 
-    const tokenData = { _id: user._id, email: user.email };
+    const tokenData = { _id: user._id, email: user.email, clientId: user.clerkId }; // Include clientId in token
     const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
 
     user.token = token;
@@ -62,6 +62,7 @@ exports.login = async (req, res, next) => {
     next(error);
   }
 };
+
 
 exports.googleLogin = async (req, res, next) => {
   try {

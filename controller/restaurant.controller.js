@@ -4,7 +4,7 @@ const ClientModel = require('../model/client.model'); // Assuming you have a Cli
 const createRestaurant = async (req, res) => {
   try {
     const { name, address, description, timing } = req.body;
-    const owner = req.user._id;
+    const owner = req.user.id; // Adjust this based on how Clerk provides the user ID
 
     // Automatically create a new Client ID
     const client = new ClientModel(); 
@@ -32,7 +32,7 @@ const createRestaurant = async (req, res) => {
 
 const getRestaurantByUser = async (req, res) => {
   try {
-    const restaurant = await RestaurantModel.findOne({ owner: req.user._id });
+    const restaurant = await RestaurantModel.findOne({ owner: req.user.id }); // Adjust this based on how Clerk provides the user ID
     if (!restaurant) {
       return res.status(404).send({ error: 'Restaurant not found' });
     }

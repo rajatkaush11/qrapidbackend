@@ -2,15 +2,15 @@ const RestaurantModel = require('../model/restaurant.model');
 
 const createRestaurant = async (req, res) => {
   try {
-    const { name, address, description } = req.body;
-    const image = req.file ? req.file.path : '';
+    const { name, address, description, timing } = req.body;
+    const owner = req.user._id;
 
     const restaurant = new RestaurantModel({
       name,
       address,
       description,
-      image,
-      owner: req.user._id
+      timing,
+      owner,
     });
 
     await restaurant.save();
@@ -34,5 +34,5 @@ const getRestaurantByUser = async (req, res) => {
 
 module.exports = {
   createRestaurant,
-  getRestaurantByUser
+  getRestaurantByUser,
 };

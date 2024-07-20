@@ -16,14 +16,15 @@ const restaurantSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    timing: {
+        type: String,
+        required: true,
+        trim: true
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
-    },
-    imagePath: {
-        type: String,
-        trim: true
     }
 }, {
     timestamps: true

@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const userRouter = require('./routers/user.router');
-const restaurantRouter = require('./routers/restaurant.router'); // Assuming you have this
+const restaurantRouter = require('./routers/restaurant.router');
 const authenticate = require('./middleware/authenticate');
 
 const app = express();

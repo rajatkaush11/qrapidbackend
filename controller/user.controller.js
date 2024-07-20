@@ -1,4 +1,5 @@
 const UserServices = require('../services/user.services');
+const UserModel = require('../model/user.model'); // Add this line to import UserModel
 
 exports.register = async (req, res, next) => {
   try {
@@ -83,7 +84,7 @@ exports.googleLogin = async (req, res, next) => {
 
 exports.getTokenByUserId = async (req, res, next) => {
   try {
-    const user = await UserModel.findById(req.params.userId);
+    const user = await UserModel.findById(req.params.userId); // Ensure UserModel is imported and used here
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     res.status(200).json({ token: user.token });
@@ -95,7 +96,7 @@ exports.getTokenByUserId = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await UserModel.find({}, '_id email');
+    const users = await UserModel.find({}, '_id email'); // Ensure UserModel is imported and used here
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -109,7 +110,7 @@ exports.createOrUpdateUser = async (req, res, next) => {
 
     let user = await UserServices.getUserByEmail(email);
     if (!user) {
-      user = new UserModel({ email, clerkId });
+      user = new UserModel({ email, clerkId }); // Ensure UserModel is imported and used here
     } else {
       user.clerkId = clerkId;
     }

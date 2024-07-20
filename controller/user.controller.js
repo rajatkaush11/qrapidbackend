@@ -72,6 +72,26 @@ exports.getUsers = async (req, res, next) => {
     next(error);
   }
 };
+const UserServices = require('../services/user.services');
+
+exports.googleLogin = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new Error('Email is required');
+    }
+
+    const { user, token } = await UserServices.registerOrLoginGoogleUser(email);
+
+    console.log('User logged in with Google:', user); // Log user details
+    console.log('Token:', token); // Log token
+
+    res.status(200).json({ status: true, success: 'Login successful', token });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
 
 exports.createOrUpdateUser = async (req, res, next) => {
   try {

@@ -18,6 +18,19 @@ class UserServices {
   static async generateAccessToken(tokenData, JWTSecret_Key, JWT_EXPIRE) {
     return jwt.sign(tokenData, JWTSecret_Key, { expiresIn: JWT_EXPIRE });
   }
+
+  static async registerOrLoginGoogleUser(email) {
+    let user = await this.getUserByEmail(email);
+    if (!user) {
+      user = new UserModel({ email });
+      await user.save();
+    }
+    const tokenData = { _id: user._id, email: user.email };
+    const token = await this.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
+    user.token = token;
+    await user.save();
+    return { user, token };
+  }
 }
 
 module.exports = UserServices;

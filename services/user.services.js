@@ -22,7 +22,7 @@ class UserServices {
   static async registerOrLoginGoogleUser(email) {
     let user = await this.getUserByEmail(email);
     if (!user) {
-      user = new UserModel({ email });
+      user = new UserModel({ email, isGoogleUser: true }); // Indicate Google user
       await user.save();
     }
     const tokenData = { _id: user._id, email: user.email };

@@ -1,5 +1,4 @@
 const UserServices = require('../services/user.services');
-const UserModel = require('../model/user.model'); // Ensure UserModel is imported
 
 exports.register = async (req, res, next) => {
   try {
@@ -110,7 +109,7 @@ exports.createOrUpdateUser = async (req, res, next) => {
 
     let user = await UserServices.getUserByEmail(email);
     if (!user) {
-      user = new UserModel({ email, clerkId }); // Ensure UserModel is imported and used here
+      user = new UserModel({ email, clerkId, isGoogleUser: true }); // Indicate Google user
     } else {
       user.clerkId = clerkId;
     }

@@ -13,6 +13,7 @@ const authenticate = async (req, res, next) => {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
 
+    // Fetch the user from the database using the user ID in the token
     const user = await UserModel.findById(verified._id);
     if (!user) return res.status(401).json({ error: 'User not found' });
 

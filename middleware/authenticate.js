@@ -5,6 +5,7 @@ const authenticate = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
     const data = jwt.verify(token, process.env.JWT_SECRET);
+
     const user = await UserModel.findOne({ _id: data._id });
 
     if (!user) {

@@ -1,4 +1,5 @@
 const UserServices = require('../services/user.services');
+const UserModel = require('../model/user.model'); // Ensure UserModel is imported
 
 exports.register = async (req, res, next) => {
   try {
@@ -105,18 +106,21 @@ exports.getUsers = async (req, res, next) => {
 
 exports.createOrUpdateUser = async (req, res, next) => {
   try {
-    const { email, clerkId } = req.body;
+    const { email, clerkId, isGoogleUser } = req.body;
+    console.log('Received request to create/update user:', req.body); // Log the request body
 
     let user = await UserServices.getUserByEmail(email);
     if (!user) {
-      user = new UserModel({ email, clerkId, isGoogleUser: true }); // Indicate Google user
+      user = new UserModel({ email, clerkId, isGoogleUser }); // Indicate Google user
+      console.log('Creating new user:', user); // Log new user creation
     } else {
       user.clerkId = clerkId;
+      console.log('Updating existing user:', user); // Log user update
     }
     await user.save();
     res.status(200).json(user);
   } catch (error) {
-    console.error(error);
+    console.error('Error in createOrUpdateUser:', error); // Log specific error
     next(error);
   }
 };

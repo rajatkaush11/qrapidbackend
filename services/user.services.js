@@ -3,28 +3,16 @@ const jwt = require("jsonwebtoken");
 
 class UserServices {
     static async registerUser(email, password) {
-        try {
-            const createUser = new UserModel({ email, password });
-            return await createUser.save();
-        } catch (err) {
-            throw err;
-        }
+        const createUser = new UserModel({ email, password });
+        return createUser.save();
     }
 
     static async getUserByEmail(email) {
-        try {
-            return await UserModel.findOne({ email });
-        } catch (err) {
-            throw err;
-        }
+        return UserModel.findOne({ email });
     }
 
     static async checkUser(email) {
-        try {
-            return await UserModel.findOne({ email });
-        } catch (error) {
-            throw error;
-        }
+        return UserModel.findOne({ email });
     }
 
     static async generateAccessToken(tokenData, JWTSecret_Key, JWT_EXPIRE) {

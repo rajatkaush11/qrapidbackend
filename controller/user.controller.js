@@ -8,9 +8,8 @@ exports.register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const duplicate = await UserServices.getUserByEmail(email);
-    if (duplicate) {
-      throw new Error(`UserName ${email}, Already Registered`);
-    }
+    if (duplicate) throw new Error(`User ${email} already registered`);
+
     await UserServices.registerUser(email, password);
     res.json({ status: true, success: 'User registered successfully' });
   } catch (err) {
@@ -23,24 +22,15 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      throw new Error('Parameters are not correct');
-    }
+    if (!email || !password) throw new Error('Parameters are not correct');
 
     let user = await UserServices.checkUser(email);
-    if (!user) {
-      throw new Error('User does not exist');
-    }
+    if (!user) throw new Error('User does not exist');
 
     const isPasswordCorrect = await user.comparePassword(password);
-    if (!isPasswordCorrect) {
-      throw new Error('Username or Password does not match');
-    }
+    if (!isPasswordCorrect) throw new Error('Username or Password does not match');
 
-    const session = await clerk.sessions.createSession({
-      emailAddress: email,
-      password: password,
-    });
+    const session = await clerk.sessions.createSession({ emailAddress: email, password: password });
 
     let tokenData = { _id: user._id, email: user.email, sessionId: session.id };
     const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, '2w');
@@ -58,9 +48,8 @@ exports.login = async (req, res, next) => {
 exports.getTokenByUserId = async (req, res, next) => {
   try {
     const user = await UserModel.findById(req.params.userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
     res.status(200).json({ token: user.token });
   } catch (error) {
     console.log(error);

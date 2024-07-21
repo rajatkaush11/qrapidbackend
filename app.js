@@ -26,7 +26,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-
 app.use(bodyParser.json());
 
 // Public routes

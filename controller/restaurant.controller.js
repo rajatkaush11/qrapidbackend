@@ -1,3 +1,5 @@
+const RestaurantModel = require('../model/restaurant.model');
+
 const createRestaurant = async (req, res) => {
   try {
     const { name, address, description, timing } = req.body;
@@ -12,7 +14,6 @@ const createRestaurant = async (req, res) => {
     });
 
     await restaurant.save();
-
     res.status(201).send(restaurant);
   } catch (error) {
     res.status(400).send({ error: 'Error creating restaurant' });

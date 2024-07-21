@@ -2,7 +2,7 @@ const RestaurantModel = require('../model/restaurant.model');
 
 const createRestaurant = async (req, res) => {
     try {
-        const { name, address, description } = req.body;
+        const { name, address, description, email, password } = req.body;
         const image = req.file ? req.file.path : '';
 
         const restaurant = new RestaurantModel({

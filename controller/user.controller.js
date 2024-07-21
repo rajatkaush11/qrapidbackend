@@ -37,9 +37,8 @@ exports.login = async (req, res, next) => {
         let tokenData = { _id: user._id, email: user.email };
         const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");
 
-        console.log('Generated Token:', token); // Log the token to the console
+        console.log('Generated Token:', token);
 
-        // Save the token in the user's record
         user.token = token;
         await user.save();
 

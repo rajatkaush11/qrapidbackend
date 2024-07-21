@@ -9,7 +9,7 @@ const authenticate = async (req, res, next) => {
   }
 
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
-  console.log('Token:', token); // Log the token to see what is being sent
+  console.log('Token:', token);
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

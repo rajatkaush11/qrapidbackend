@@ -21,7 +21,7 @@ const restaurantSchema = new mongoose.Schema({
         required: true,
         ref: 'User'
     },
-    imagePath: {
+    image: {
         type: String,
         trim: true
     }

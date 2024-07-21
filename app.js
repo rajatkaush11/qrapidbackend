@@ -8,6 +8,7 @@ dotenv.config();
 
 const userRouter = require('./routers/user.router');
 const restaurantRouter = require('./routers/restaurant.router');
+const authenticate = require('./middleware/authenticate');
 
 const app = express();
 
@@ -32,7 +33,7 @@ app.use(bodyParser.json());
 app.use(userRouter);
 
 // Protected routes
-app.use('/restaurants', restaurantRouter);
+app.use('/restaurants', authenticate, restaurantRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

@@ -2,50 +2,40 @@ const RestaurantModel = require('../model/restaurant.model');
 
 const createRestaurant = async (req, res) => {
   try {
-    const { name, address, description, timing, clientId } = req.body;
-
-    if (!clientId) {
-      console.error('clientId is required');
-      return res.status(400).send({ error: 'clientId is required' });
-    }
+    const { name, address, description, timing } = req.body;
+    const owner = req.user._id;
 
     const restaurant = new RestaurantModel({
       name,
       address,
       description,
       timing,
-      owner: clientId, // Use clientId directly
+      owner,
     });
 
     await restaurant.save();
-    console.log('Restaurant created:', restaurant);
+
+    console.log('Restaurant created:', restaurant); // Log restaurant details
 
     res.status(201).send(restaurant);
   } catch (error) {
-    console.error('Error creating restaurant:', error.message);
+    console.error(error);
     res.status(400).send({ error: 'Error creating restaurant' });
   }
 };
 
 const getRestaurantByUser = async (req, res) => {
   try {
-    const { clientId } = req.query; // Assuming clientId is passed as a query parameter
-
-    if (!clientId) {
-      console.error('clientId is required');
-      return res.status(400).send({ error: 'clientId is required' });
-    }
-
-    const restaurant = await RestaurantModel.findOne({ owner: clientId });
+    const restaurant = await RestaurantModel.findOne({ owner: req.user._id });
     if (!restaurant) {
-      console.error('Restaurant not found for clientId:', clientId);
       return res.status(404).send({ error: 'Restaurant not found' });
     }
 
-    console.log('Restaurant details:', restaurant);
+    console.log('Restaurant details:', restaurant); // Log restaurant details
+
     res.status(200).send(restaurant);
   } catch (error) {
-    console.error('Error fetching restaurant details:', error.message);
+    console.error(error);
     res.status(500).send({ error: 'Error fetching restaurant details' });
   }
 };

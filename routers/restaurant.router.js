@@ -3,7 +3,7 @@ const router = express.Router();
 const authenticate = require('../middleware/authenticate');
 const RestaurantController = require('../controller/restaurant.controller');
 
-router.post('/restaurants', authenticate, RestaurantController.createRestaurant);
-router.get('/restaurants', authenticate, RestaurantController.getRestaurantByUser);
+router.post('/', authenticate, RestaurantController.createRestaurant);
+router.get('/', authenticate, RestaurantController.getRestaurantByUser);
 
 module.exports = router;

@@ -5,6 +5,10 @@ const createRestaurant = async (req, res) => {
     const { name, address, description, timing } = req.body;
     const owner = req.user.clerkId; // Use Clerk ID as owner
 
+    if (!name || !address || !description || !timing) {
+      throw new Error('Missing required fields');
+    }
+
     const restaurant = new RestaurantModel({
       name,
       address,
@@ -16,7 +20,8 @@ const createRestaurant = async (req, res) => {
     await restaurant.save();
     res.status(201).send(restaurant);
   } catch (error) {
-    res.status(400).send({ error: 'Error creating restaurant' });
+    console.error('Error creating restaurant:', error.message);
+    res.status(400).send({ error: `Error creating restaurant: ${error.message}` });
   }
 };
 

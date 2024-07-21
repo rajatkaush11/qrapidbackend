@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 // Add CORS middleware
 app.use(cors({
-  origin: 'https://qrapidwebsite.vercel.app', // Replace with your frontend URL
+  origin: 'https://website-steel-alpha-88.vercel.app', // Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 app.use(userRouter);
 
 // Protected routes
-app.use(authenticate, restaurantRouter);
+app.use('/restaurants', authenticate, restaurantRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

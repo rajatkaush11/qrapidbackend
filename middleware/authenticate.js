@@ -10,8 +10,7 @@ const authenticate = async (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    const clerkUser = await users.getUser(verified.clerkId); // Get user details from Clerk
-    req.user = { clerkId: verified.clerkId, email: clerkUser.email };
+    req.user = { clerkId: verified.clerkId, email: verified.email }; // No need to fetch from Clerk here
     next();
   } catch (error) {
     res.status(400).json({ error: 'Invalid token' });

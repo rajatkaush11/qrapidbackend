@@ -1,5 +1,6 @@
 const UserServices = require('../services/user.services');
 const UserModel = require('../model/user.model');
+const RestaurantModel = require('../model/restaurant.model');
 
 exports.register = async (req, res, next) => {
     try {
@@ -26,12 +27,17 @@ exports.login = async (req, res, next) => {
 
         let user = await UserServices.checkUser(email);
         if (!user) {
-            throw new Error('User does not exist');
+            throw new Error('User does not exist. Please register your restaurant first.');
         }
 
         const isPasswordCorrect = await user.comparePassword(password);
         if (!isPasswordCorrect) {
             throw new Error('Username or Password does not match');
+        }
+
+        const restaurant = await RestaurantModel.findOne({ owner: user._id });
+        if (!restaurant) {
+            throw new Error('Restaurant registration is incomplete. Please register your restaurant.');
         }
 
         let tokenData = { _id: user._id, email: user.email };
@@ -43,29 +49,6 @@ exports.login = async (req, res, next) => {
         await user.save();
 
         res.status(200).json({ status: true, success: "Login successful", token: token });
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-};
-
-exports.getTokenByUserId = async (req, res, next) => {
-    try {
-        const user = await UserModel.findById(req.params.userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        res.status(200).json({ token: user.token });
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-};
-
-exports.getUsers = async (req, res, next) => {
-    try {
-        const users = await UserModel.find({}, '_id email');
-        res.status(200).json(users);
     } catch (error) {
         console.log(error);
         next(error);

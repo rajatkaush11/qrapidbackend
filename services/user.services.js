@@ -1,5 +1,5 @@
-const UserModel = require('../model/user.model');
 const jwt = require('jsonwebtoken');
+const UserModel = require('../model/user.model');
 
 class UserServices {
   static async registerUser(email, password) {
@@ -22,7 +22,7 @@ class UserServices {
   static async registerOrLoginGoogleUser(email) {
     let user = await this.getUserByEmail(email);
     if (!user) {
-      user = new UserModel({ email, isGoogleUser: true }); // Indicate Google user
+      user = new UserModel({ email, isGoogleUser: true });
       await user.save();
     }
     const tokenData = { _id: user._id, email: user.email };

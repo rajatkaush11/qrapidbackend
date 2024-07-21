@@ -3,7 +3,7 @@ const router = express.Router();
 const authenticate = require('../middleware/authenticate');
 const CategoryController = require('../controller/category.controller');
 
-router.post('/', authenticate, CategoryController.createCategory);
+router.post('/categories', authenticate, CategoryController.createCategory);
 router.get('/categories/:restaurantId', authenticate, CategoryController.getCategoriesByRestaurant);
 router.get('/items/:categoryId', authenticate, CategoryController.getItemsByCategory);
 

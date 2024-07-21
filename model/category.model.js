@@ -7,7 +7,7 @@ const categorySchema = new mongoose.Schema({
         trim: true
     },
     restaurant: {
-        type: String, // Change to String to store clerkId
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Restaurant'
     }

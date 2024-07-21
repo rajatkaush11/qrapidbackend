@@ -1,20 +1,29 @@
 const jwt = require('jsonwebtoken');
-const { users } = require('@clerk/clerk-sdk-node');
+const UserModel = require('../model/user.model');
 
 const authenticate = async (req, res, next) => {
   const authHeader = req.header('Authorization');
-  if (!authHeader) return res.status(401).json({ error: 'Access denied. No token provided.' });
+  if (!authHeader) {
+    console.error('No Authorization header found');
+    return res.status(401).send({ error: 'Please authenticate.' });
+  }
 
-  const token = authHeader.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+  console.log('Token:', token); // Log the token to see what is being sent
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { clerkId: verified.clerkId, email: verified.email }; // No need to fetch from Clerk here
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Decoded:', decoded);
+    const user = await UserModel.findById(decoded._id);
+    if (!user) {
+      console.error('User not found');
+      throw new Error('User not found');
+    }
+    req.user = user;
     next();
   } catch (error) {
-    console.error('Token verification failed:', error);
-    res.status(400).json({ error: 'Invalid token' });
+    console.error('Authentication error:', error);
+    res.status(401).send({ error: 'Please authenticate.' });
   }
 };
 

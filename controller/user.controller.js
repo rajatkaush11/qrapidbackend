@@ -1,56 +1,74 @@
+const UserServices = require('../services/user.services');
 const UserModel = require('../model/user.model');
-const jwt = require('jsonwebtoken');
-const { users } = require('@clerk/clerk-sdk-node');
 
-// Google login handler
-exports.googleLogin = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      throw new Error('Email is required');
+exports.register = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        const duplicate = await UserServices.getUserByEmail(email);
+        if (duplicate) {
+            throw new Error(`UserName ${email}, Already Registered`);
+        }
+        await UserServices.registerUser(email, password);
+        res.json({ status: true, success: 'User registered successfully' });
+    } catch (err) {
+        console.log(err);
+        next(err);
     }
+};
 
-    let user = await UserModel.findOne({ email });
-    let clerkId;
+exports.login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
 
-    if (!user) {
-      const clerkUsers = await users.getUserList({ emailAddress: email });
-      if (clerkUsers.length === 0) {
-        // Create a new Clerk user if not exists
-        const clerkUser = await users.createUser({
-          emailAddresses: [email],
-        });
+        if (!email || !password) {
+            throw new Error('Parameters are not correct');
+        }
 
-        clerkId = clerkUser.id;
-        user = new UserModel({
-          email,
-          clerkId,
-          isGoogleUser: true,
-        });
+        let user = await UserServices.checkUser(email);
+        if (!user) {
+            throw new Error('User does not exist');
+        }
+
+        const isPasswordCorrect = await user.comparePassword(password);
+        if (!isPasswordCorrect) {
+            throw new Error('Username or Password does not match');
+        }
+
+        let tokenData = { _id: user._id, email: user.email };
+        const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");
+
+        console.log('Generated Token:', token); // Log the token to the console
+
+        // Save the token in the user's record
+        user.token = token;
         await user.save();
-      } else {
-        const clerkUser = clerkUsers[0];
-        clerkId = clerkUser.id;
-        user = new UserModel({
-          email,
-          clerkId,
-          isGoogleUser: true,
-        });
-        await user.save();
-      }
-    } else {
-      clerkId = user.clerkId;
+
+        res.status(200).json({ status: true, success: "Login successful", token: token });
+    } catch (error) {
+        console.log(error);
+        next(error);
     }
+};
 
-    // Generate token
-    const tokenData = { _id: user._id, email: user.email, clerkId: user.clerkId };
-    const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '2w' });
+exports.getTokenByUserId = async (req, res, next) => {
+    try {
+        const user = await UserModel.findById(req.params.userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json({ token: user.token });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+};
 
-    user.token = token;
-    await user.save();
-
-    res.status(200).json({ status: true, clerkId, token, message: 'User logged in with Google' });
-  } catch (error) {
-    next(error);
-  }
+exports.getUsers = async (req, res, next) => {
+    try {
+        const users = await UserModel.find({}, '_id email');
+        res.status(200).json(users);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
 };

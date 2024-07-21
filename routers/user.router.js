@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const UserController = require('../controller/user.controller');
 
-// Google login route
-router.post('/googleLogin', UserController.googleLogin);
-
-// Other user-related routes can be added here
+router.post("/register", UserController.register);
+router.post("/login", UserController.login);
+router.get("/token/:userId", UserController.getTokenByUserId);
+router.get("/users", UserController.getUsers); // Add this route to get users
 
 module.exports = router;

@@ -1,38 +1,41 @@
 const mongoose = require('mongoose');
-const bcryptjs = require('bcryptjs');
+const bcryptjs = require("bcryptjs");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  email: {
-    type: String,
-    lowercase: true,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-  },
-  token: {
-    type: String,
-  },
-  clerkId: {
-    type: String,
-  },
-  isGoogleUser: {
-    type: Boolean,
-    default: false,
-  }
+    email: {
+        type: String,
+        lowercase: true,
+        required: [true, "Email can't be empty"],
+        match: [/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, "Email format is not correct"],
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: [true, "Password is required"],
+    },
+    token: {
+        type: String,
+    },
 }, { timestamps: true });
 
-userSchema.pre('save', async function () {
-  if (!this.isModified('password') || !this.password) return;
-  const salt = await bcryptjs.genSalt(10);
-  const hash = await bcryptjs.hash(this.password, salt);
-  this.password = hash;
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+    try {
+        const salt = await bcryptjs.genSalt(10);
+        const hash = await bcryptjs.hash(this.password, salt);
+        this.password = hash;
+    } catch (err) {
+        throw err;
+    }
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
-  return bcryptjs.compare(candidatePassword, this.password);
+    try {
+        return await bcryptjs.compare(candidatePassword, this.password);
+    } catch (error) {
+        throw error;
+    }
 };
 
 const UserModel = mongoose.model('User', userSchema);

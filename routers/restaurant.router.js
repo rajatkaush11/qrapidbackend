@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../middleware/authenticate');
+const upload = require('../middleware/upload');
 const RestaurantController = require('../controller/restaurant.controller');
 
-// Create a new restaurant
-router.post('/', authenticate, RestaurantController.createRestaurant);
-
-// Get restaurant by user
-router.get('/', authenticate, RestaurantController.getRestaurantByUser);
+router.post('/restaurants', authenticate, upload.single('image'), RestaurantController.createRestaurant);
+router.get('/restaurants', authenticate, RestaurantController.getRestaurantByUser);
 
 module.exports = router;

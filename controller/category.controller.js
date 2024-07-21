@@ -1,8 +1,9 @@
 const CategoryModel = require('../model/category.model');
-const ItemModel = require('../model/item.model');
 
 const createCategory = async (req, res) => {
-    const { name, restaurantId } = req.body;
+    const { name } = req.body;
+    const restaurantId = req.user.clerkId; // Use clerkId for restaurantId
+
     if (!name || !restaurantId) {
         return res.status(400).send({ error: 'Category name and restaurantId are required' });
     }

@@ -8,6 +8,8 @@ dotenv.config();
 
 const userRouter = require('./routers/user.router');
 const restaurantRouter = require('./routers/restaurant.router');
+const categoryRouter = require('./routers/category.router');
+const itemRouter = require('./routers/item.router');
 const authenticate = require('./middleware/authenticate');
 
 const app = express();
@@ -34,6 +36,8 @@ app.use(userRouter);
 
 // Protected routes
 app.use('/restaurants', authenticate, restaurantRouter);
+app.use('/categories', authenticate, categoryRouter);
+app.use('/items', authenticate, itemRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

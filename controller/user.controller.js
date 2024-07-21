@@ -1,5 +1,4 @@
 const UserModel = require('../model/user.model');
-const jwt = require('jsonwebtoken');
 const { users } = require('@clerk/clerk-sdk-node');
 
 // Google login handler
@@ -41,30 +40,6 @@ exports.googleLogin = async (req, res, next) => {
     } else {
       res.status(200).json({ status: true, clerkId: user.clerkId, message: 'User already exists' });
     }
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Create or update user with Clerk ID
-exports.createOrUpdateUser = async (req, res, next) => {
-  try {
-    const { email, clerkId, isGoogleUser } = req.body;
-
-    let user = await UserModel.findOne({ email });
-    if (!user) {
-      user = new UserModel({
-        email,
-        clerkId,
-        isGoogleUser
-      });
-    } else {
-      user.clerkId = clerkId;
-      user.isGoogleUser = isGoogleUser;
-    }
-
-    await user.save();
-    res.status(200).json(user);
   } catch (error) {
     next(error);
   }

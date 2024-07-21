@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const userRouter = require('./routers/user.router');
-const restaurantRouter = require('./routers/restaurant.router');
+const categoryRouter = require('./routers/category.router');
+const itemRouter = require('./routers/item.router');
 require('dotenv').config();
 
 const app = express();
@@ -28,11 +29,11 @@ app.use(cors({
   },
   credentials: true,
 }));
-
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);
-app.use(restaurantRouter);
+app.use(categoryRouter);
+app.use(itemRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);

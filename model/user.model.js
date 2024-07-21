@@ -17,6 +17,12 @@ const userSchema = new Schema({
     token: {
         type: String,
     },
+    restaurantDetails: {
+        name: { type: String, required: true },
+        address: { type: String, required: true },
+        description: { type: String, required: true },
+        timing: { type: String, required: true },
+    }
 }, { timestamps: true });
 
 userSchema.pre("save", async function () {

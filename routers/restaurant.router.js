@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authenticate = require('../middleware/authenticate');
 const RestaurantController = require('../controller/restaurant.controller');
 
-router.post('/', authenticate, RestaurantController.createRestaurant);
-router.get('/', authenticate, RestaurantController.getRestaurantByUser);
+// No authentication middleware used here
+router.post('/', RestaurantController.createRestaurant);
+router.get('/', RestaurantController.getRestaurantByUser);
 
 module.exports = router;

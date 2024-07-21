@@ -2,15 +2,18 @@ const RestaurantModel = require('../model/restaurant.model');
 
 const createRestaurant = async (req, res) => {
   try {
-    const { name, address, description, timing } = req.body;
-    const owner = req.clientId; // Using clientId
+    const { name, address, description, timing, clientId } = req.body;
+
+    if (!clientId) {
+      return res.status(400).send({ error: 'clientId is required' });
+    }
 
     const restaurant = new RestaurantModel({
       name,
       address,
       description,
       timing,
-      owner,
+      owner: clientId, // Use clientId directly
     });
 
     await restaurant.save();
@@ -26,7 +29,13 @@ const createRestaurant = async (req, res) => {
 
 const getRestaurantByUser = async (req, res) => {
   try {
-    const restaurant = await RestaurantModel.findOne({ owner: req.clientId }); // Using clientId
+    const { clientId } = req.query; // Assuming clientId is passed as a query parameter
+
+    if (!clientId) {
+      return res.status(400).send({ error: 'clientId is required' });
+    }
+
+    const restaurant = await RestaurantModel.findOne({ owner: clientId });
     if (!restaurant) {
       return res.status(404).send({ error: 'Restaurant not found' });
     }

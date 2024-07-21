@@ -1,6 +1,8 @@
 const UserModel = require('../model/user.model');
 const jwt = require('jsonwebtoken');
-const { users } = require('@clerk/clerk-sdk-node');
+const { Clerk } = require('@clerk/clerk-sdk-node');
+
+const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
 
 // Google login handler
 exports.googleLogin = async (req, res, next) => {
@@ -12,7 +14,7 @@ exports.googleLogin = async (req, res, next) => {
 
     let user = await UserModel.findOne({ email });
     if (!user) {
-      const clerkUser = await users.getUserList({ emailAddress: email });
+      const clerkUser = await clerk.users.getUserList({ emailAddress: email });
       if (!clerkUser.length) {
         throw new Error('Clerk user not found');
       }

@@ -13,26 +13,34 @@ exports.googleLogin = async (req, res, next) => {
     let user = await UserModel.findOne({ email });
     if (!user) {
       const clerkUsers = await users.getUserList({ emailAddress: email });
-      if (!clerkUsers.length) {
-        throw new Error('Clerk user not found');
+      if (clerkUsers.length === 0) {
+        // Create a new Clerk user if not exists
+        const clerkUser = await users.createUser({
+          emailAddresses: [email],
+        });
+
+        user = new UserModel({
+          email,
+          clerkId: clerkUser.id,
+          isGoogleUser: true,
+        });
+        await user.save();
+
+        res.status(201).json({ status: true, clerkId: clerkUser.id, message: 'User registered with Google' });
+      } else {
+        const clerkUser = clerkUsers[0];
+        user = new UserModel({
+          email,
+          clerkId: clerkUser.id,
+          isGoogleUser: true,
+        });
+        await user.save();
+
+        res.status(200).json({ status: true, clerkId: clerkUser.id, message: 'User logged in with Google' });
       }
-
-      const clerkUser = clerkUsers[0];
-      user = new UserModel({
-        email,
-        clerkId: clerkUser.id,
-        isGoogleUser: true
-      });
-      await user.save();
+    } else {
+      res.status(200).json({ status: true, clerkId: user.clerkId, message: 'User already exists' });
     }
-
-    const tokenData = { _id: user._id, email: user.email, clerkId: user.clerkId };
-    const token = jwt.sign(tokenData, process.env.JWT_SECRET, { expiresIn: '2w' });
-
-    user.token = token;
-    await user.save();
-
-    res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {
     next(error);
   }

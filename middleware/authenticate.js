@@ -13,6 +13,7 @@ const authenticate = async (req, res, next) => {
     req.user = { clerkId: verified.clerkId, email: verified.email }; // No need to fetch from Clerk here
     next();
   } catch (error) {
+    console.error('Token verification failed:', error);
     res.status(400).json({ error: 'Invalid token' });
   }
 };

@@ -1,4 +1,5 @@
 const CategoryModel = require('../model/category.model');
+const ItemModel = require('../model/item.model');
 
 const createCategory = async (req, res) => {
     const { name } = req.body;
@@ -18,7 +19,7 @@ const createCategory = async (req, res) => {
 
 const getCategoriesByRestaurant = async (req, res) => {
     try {
-        const { restaurantId } = req.params;
+        const { restaurantId } = req.user.clerkId; // Use clerkId for restaurantId
         const categories = await CategoryModel.find({ restaurant: restaurantId });
         res.status(200).send(categories);
     } catch (error) {

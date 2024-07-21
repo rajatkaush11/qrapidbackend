@@ -4,7 +4,7 @@ const UserController = require('../controller/user.controller');
 
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);
-router.post('/google-login', UserController.googleLogin); // Google login route
+router.post('/google-login', UserController.googleLogin);
 router.get('/token/:userId', UserController.getTokenByUserId);
 router.get('/users', UserController.getUsers);
 router.post('/users', UserController.createOrUpdateUser);

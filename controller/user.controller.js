@@ -1,5 +1,5 @@
 const UserServices = require('../services/user.services');
-const UserModel = require('../model/user.model'); // Ensure UserModel is imported
+const UserModel = require('../model/user.model');
 
 exports.register = async (req, res, next) => {
   try {
@@ -20,8 +20,8 @@ exports.register = async (req, res, next) => {
     user.token = token;
     await user.save();
 
-    console.log('User registered:', user); // Log user details
-    console.log('Token:', token); // Log token
+    console.log('User registered:', user);
+    console.log('Token:', token);
 
     res.status(201).json({ status: true, success: 'User registered successfully', token });
   } catch (err) {
@@ -53,8 +53,8 @@ exports.login = async (req, res, next) => {
     user.token = token;
     await user.save();
 
-    console.log('User logged in:', user); // Log user details
-    console.log('Token:', token); // Log token
+    console.log('User logged in:', user);
+    console.log('Token:', token);
 
     res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {
@@ -72,8 +72,8 @@ exports.googleLogin = async (req, res, next) => {
 
     const { user, token } = await UserServices.registerOrLoginGoogleUser(email);
 
-    console.log('User logged in with Google:', user); // Log user details
-    console.log('Token:', token); // Log token
+    console.log('User logged in with Google:', user);
+    console.log('Token:', token);
 
     res.status(200).json({ status: true, success: 'Login successful', token });
   } catch (error) {
@@ -84,7 +84,7 @@ exports.googleLogin = async (req, res, next) => {
 
 exports.getTokenByUserId = async (req, res, next) => {
   try {
-    const user = await UserModel.findById(req.params.userId); // Ensure UserModel is imported and used here
+    const user = await UserModel.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     res.status(200).json({ token: user.token });
@@ -96,7 +96,7 @@ exports.getTokenByUserId = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await UserModel.find({}, '_id email'); // Ensure UserModel is imported and used here
+    const users = await UserModel.find({}, '_id email');
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -107,20 +107,20 @@ exports.getUsers = async (req, res, next) => {
 exports.createOrUpdateUser = async (req, res, next) => {
   try {
     const { email, clerkId, isGoogleUser } = req.body;
-    console.log('Received request to create/update user:', req.body); // Log the request body
+    console.log('Received request to create/update user:', req.body);
 
     let user = await UserServices.getUserByEmail(email);
     if (!user) {
-      user = new UserModel({ email, clerkId, isGoogleUser }); // Indicate Google user
-      console.log('Creating new user:', user); // Log new user creation
+      user = new UserModel({ email, clerkId, isGoogleUser });
+      console.log('Creating new user:', user);
     } else {
       user.clerkId = clerkId;
-      console.log('Updating existing user:', user); // Log user update
+      console.log('Updating existing user:', user);
     }
     await user.save();
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error in createOrUpdateUser:', error); // Log specific error
+    console.error('Error in createOrUpdateUser:', error);
     next(error);
   }
 };

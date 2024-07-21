@@ -3,12 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const { Clerk } = require('@clerk/clerk-sdk-node');
+const { users } = require('@clerk/clerk-sdk-node');
 
 dotenv.config();
-
-// Initialize Clerk SDK
-const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
 
 const userRouter = require('./routers/user.router');
 const restaurantRouter = require('./routers/restaurant.router');
@@ -26,7 +23,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 // Middleware
 app.use(cors({
-  origin: 'https://qrapidwebsite.vercel.app', // Use environment variable for frontend URL
+  origin: 'https://qrapidwebsite.vercel.app', // Directly use the frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

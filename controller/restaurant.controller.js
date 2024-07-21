@@ -1,9 +1,9 @@
-const RestaurantModel = require('../model/restaurant.model');
+const RestaurantModel = require('../models/restaurant.model');
 
 const createRestaurant = async (req, res) => {
   try {
     const { name, address, description, timing } = req.body;
-    const clientId = req.user.clientId;
+    const clientId = req.user.clerkId;
 
     const restaurant = new RestaurantModel({
       name,
@@ -26,7 +26,7 @@ const createRestaurant = async (req, res) => {
 
 const getRestaurantByUser = async (req, res) => {
   try {
-    const restaurant = await RestaurantModel.findOne({ clientId: req.user.clientId });
+    const restaurant = await RestaurantModel.findOne({ clientId: req.user.clerkId });
     if (!restaurant) {
       return res.status(404).send({ error: 'Restaurant not found' });
     }

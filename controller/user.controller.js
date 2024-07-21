@@ -6,7 +6,8 @@ exports.register = async (req, res, next) => {
         const { email, password, restaurantName, address, description, timing } = req.body;
         const duplicate = await UserServices.getUserByEmail(email);
         if (duplicate) {
-            throw new Error(`User ${email} already registered`);
+            res.status(400).json({ message: `User ${email} already registered` });
+            return;
         }
         const user = await UserServices.registerUser(email, password, { restaurantName, address, description, timing });
         res.json({ status: true, success: 'User and Restaurant registered successfully' });
@@ -21,17 +22,20 @@ exports.login = async (req, res, next) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            throw new Error('Parameters are not correct');
+            res.status(400).json({ message: 'Parameters are not correct' });
+            return;
         }
 
         let user = await UserServices.checkUser(email);
         if (!user) {
-            throw new Error('User does not exist');
+            res.status(400).json({ message: 'User does not exist' });
+            return;
         }
 
         const isPasswordCorrect = await user.comparePassword(password);
         if (!isPasswordCorrect) {
-            throw new Error('Username or Password does not match');
+            res.status(400).json({ message: 'Username or Password does not match' });
+            return;
         }
 
         let tokenData = { _id: user._id, email: user.email };

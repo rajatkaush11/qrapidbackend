@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../middleware/authenticate');
-const RestaurantController = require('../controllers/restaurant.controller');
+const RestaurantController = require('../controller/restaurant.controller');
 
 router.post('/restaurants', authenticate, RestaurantController.createRestaurant);
 router.get('/restaurants', authenticate, RestaurantController.getRestaurantByUser);

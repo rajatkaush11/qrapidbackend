@@ -3,14 +3,14 @@ const RestaurantModel = require('../model/restaurant.model');
 const createRestaurant = async (req, res) => {
   try {
     const { name, address, description, timing } = req.body;
-    const owner = req.user._id;
+    const clientId = req.user.clientId;
 
     const restaurant = new RestaurantModel({
       name,
       address,
       description,
       timing,
-      owner,
+      clientId,
     });
 
     await restaurant.save();
@@ -19,14 +19,14 @@ const createRestaurant = async (req, res) => {
 
     res.status(201).send(restaurant);
   } catch (error) {
-    console.error(error);
+    console.error('Error creating restaurant:', error);
     res.status(400).send({ error: 'Error creating restaurant' });
   }
 };
 
 const getRestaurantByUser = async (req, res) => {
   try {
-    const restaurant = await RestaurantModel.findOne({ owner: req.user._id });
+    const restaurant = await RestaurantModel.findOne({ clientId: req.user.clientId });
     if (!restaurant) {
       return res.status(404).send({ error: 'Restaurant not found' });
     }
@@ -35,7 +35,7 @@ const getRestaurantByUser = async (req, res) => {
 
     res.status(200).send(restaurant);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching restaurant details:', error);
     res.status(500).send({ error: 'Error fetching restaurant details' });
   }
 };

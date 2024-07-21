@@ -6,10 +6,16 @@ exports.register = async (req, res, next) => {
         const { email, password, restaurantName, address, description, timing } = req.body;
         const duplicate = await UserServices.getUserByEmail(email);
         if (duplicate) {
-            res.status(400).json({ message: `User ${email} already registered` });
-            return;
+            return res.status(400).json({ message: `User ${email} already registered` });
         }
-        const user = await UserServices.registerUser(email, password, { restaurantName, address, description, timing });
+
+        const user = await UserServices.registerUser(email, password, {
+            name: restaurantName,
+            address,
+            description,
+            timing,
+        });
+
         res.json({ status: true, success: 'User and Restaurant registered successfully' });
     } catch (err) {
         console.log(err);

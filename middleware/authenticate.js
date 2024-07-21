@@ -19,6 +19,7 @@ const authenticate = (req, res, next) => {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     console.log('Token verified successfully:', verified);
     req.user = verified;
+    req.clientId = verified.clientId; // Assuming the token payload contains `clientId`
     next();
   } catch (error) {
     console.error('Token verification failed:', error.message);

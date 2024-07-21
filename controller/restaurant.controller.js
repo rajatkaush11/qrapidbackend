@@ -15,7 +15,7 @@ const createRestaurant = async (req, res) => {
 
     await restaurant.save();
 
-    console.log('Restaurant created:', restaurant); // Log restaurant details
+    console.log('Restaurant created:', restaurant);
 
     res.status(201).send(restaurant);
   } catch (error) {
@@ -31,7 +31,7 @@ const getRestaurantByUser = async (req, res) => {
       return res.status(404).send({ error: 'Restaurant not found' });
     }
 
-    console.log('Restaurant details:', restaurant); // Log restaurant details
+    console.log('Restaurant details:', restaurant);
 
     res.status(200).send(restaurant);
   } catch (error) {

@@ -4,6 +4,7 @@ const UserModel = require('../model/user.model');
 exports.register = async (req, res, next) => {
     try {
         const { email, password, restaurantName, address, description, timing } = req.body;
+        console.log('Registration Data:', { email, password, restaurantName, address, description, timing });
         const duplicate = await UserServices.getUserByEmail(email);
         if (duplicate) {
             return res.status(400).json({ message: `User ${email} already registered` });
@@ -26,6 +27,7 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
+        console.log('Login Data:', { email, password });
 
         if (!email || !password) {
             res.status(400).json({ message: 'Parameters are not correct' });
@@ -47,9 +49,8 @@ exports.login = async (req, res, next) => {
         let tokenData = { _id: user._id, email: user.email };
         const token = await UserServices.generateAccessToken(tokenData, process.env.JWT_SECRET, "2w");
 
-        console.log('Generated Token:', token); // Log the token to the console
+        console.log('Generated Token:', token);
 
-        // Save the token in the user's record
         user.token = token;
         await user.save();
 
@@ -59,7 +60,6 @@ exports.login = async (req, res, next) => {
         next(error);
     }
 };
-
 exports.getTokenByUserId = async (req, res, next) => {
     try {
         const user = await UserModel.findById(req.params.userId);

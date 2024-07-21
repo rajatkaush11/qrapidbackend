@@ -1,35 +1,46 @@
-const mongoose = require('mongoose');
+const RestaurantModel = require('../model/restaurant.model');
 
-const restaurantSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  address: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  description: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  timing: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'User',
-  },
-}, {
-  timestamps: true,
-});
+const createRestaurant = async (req, res) => {
+  try {
+    const { name, address, description, timing } = req.body;
+    const owner = req.user._id; // Using the user ID from the token
 
-const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+    const restaurant = new RestaurantModel({
+      name,
+      address,
+      description,
+      timing,
+      owner,
+    });
 
-module.exports = Restaurant;
+    await restaurant.save();
+
+    console.log('Restaurant created:', restaurant);
+
+    res.status(201).send(restaurant);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({ error: 'Error creating restaurant' });
+  }
+};
+
+const getRestaurantByUser = async (req, res) => {
+  try {
+    const restaurant = await RestaurantModel.findOne({ owner: req.user._id });
+    if (!restaurant) {
+      return res.status(404).send({ error: 'Restaurant not found' });
+    }
+
+    console.log('Restaurant details:', restaurant);
+
+    res.status(200).send(restaurant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'Error fetching restaurant details' });
+  }
+};
+
+module.exports = {
+  createRestaurant,
+  getRestaurantByUser,
+};

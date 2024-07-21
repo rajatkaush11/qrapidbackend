@@ -3,8 +3,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const { Clerk } = require('@clerk/clerk-sdk-node');
 
 dotenv.config();
+
+// Initialize Clerk SDK
+const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
 
 const userRouter = require('./routers/user.router');
 const restaurantRouter = require('./routers/restaurant.router');
@@ -12,6 +16,7 @@ const authenticate = require('./middleware/authenticate');
 
 const app = express();
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB Connected'))
   .catch(err => {
@@ -19,14 +24,13 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     process.exit(1); // Exit process with failure
   });
 
-// Add CORS middleware
+// Middleware
 app.use(cors({
-  origin: 'https://qrapidwebsite.vercel.app', // Replace with your frontend URL
+  origin: 'https://qrapidwebsite.vercel.app', // Use environment variable for frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-
 app.use(bodyParser.json());
 
 // Public routes
@@ -35,6 +39,7 @@ app.use(userRouter);
 // Protected routes
 app.use('/restaurants', authenticate, restaurantRouter);
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error', details: err.message });

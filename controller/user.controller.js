@@ -14,14 +14,15 @@ exports.googleLogin = async (req, res, next) => {
 
     let user = await UserModel.findOne({ email });
     if (!user) {
-      const clerkUser = await clerk.users.getUserList({ emailAddress: email });
-      if (!clerkUser.length) {
+      const clerkUsers = await clerk.users.getUserList({ emailAddress: email });
+      if (!clerkUsers.length) {
         throw new Error('Clerk user not found');
       }
 
+      const clerkUser = clerkUsers[0];
       user = new UserModel({
         email,
-        clerkId: clerkUser[0].id,
+        clerkId: clerkUser.id,
         isGoogleUser: true
       });
       await user.save();

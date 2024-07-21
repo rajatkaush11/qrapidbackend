@@ -8,7 +8,6 @@ dotenv.config();
 
 const userRouter = require('./routers/user.router');
 const restaurantRouter = require('./routers/restaurant.router');
-const authenticate = require('./middleware/authenticate');
 
 const app = express();
 
@@ -26,13 +25,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
 app.use(bodyParser.json());
 
 // Public routes
 app.use(userRouter);
 
 // Protected routes
-app.use('/restaurants', authenticate, restaurantRouter);
+app.use('/restaurants', restaurantRouter);
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal Server Error', details: err.message });

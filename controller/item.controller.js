@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const ItemModel = require('../model/item.model');
 const CategoryModel = require('../model/category.model');
 
@@ -64,7 +63,25 @@ const getItemsByCategory = async (req, res) => {
     }
 };
 
+const deleteItem = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ error: 'Invalid item ID' });
+        }
+        const item = await ItemModel.findByIdAndDelete(id);
+        if (!item) {
+            return res.status(404).send({ error: 'Item not found' });
+        }
+        res.status(200).send({ message: 'Item deleted successfully' });
+    } catch (error) {
+        console.error("Failed to delete item:", error);
+        res.status(500).send({ error: 'Error deleting item' });
+    }
+};
+
 module.exports = {
     createItem,
-    getItemsByCategory
+    getItemsByCategory,
+    deleteItem,
 };

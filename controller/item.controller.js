@@ -81,8 +81,26 @@ const deleteItem = async (req, res) => {
     }
 };
 
+const getItemsByCategoryAndUser = async (req, res) => {
+    try {
+        const { categoryId, userId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+            console.error('Invalid category ID:', categoryId);
+            return res.status(400).send({ error: 'Invalid category ID' });
+        }
+
+        const items = await ItemModel.find({ category: categoryId, user: userId });
+        res.status(200).send(items);
+    } catch (error) {
+        console.error("Failed to fetch items:", error);
+        res.status(500).send({ error: 'Error fetching items' });
+    }
+};
+
 module.exports = {
     createItem,
     getItemsByCategory,
     deleteItem,
+    getItemsByCategoryAndUser // Add this export
 };

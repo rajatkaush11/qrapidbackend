@@ -45,8 +45,22 @@ const updateCategory = async (req, res) => {
     }
 };
 
+
+const getCategoriesByRestaurantAndUser = async (req, res) => {
+    const restaurantId = req.params.restaurantId;
+    const userId = req.params.userId; // Retrieve user ID from the URL parameters
+    try {
+        const categories = await CategoryModel.find({ user: userId, restaurant: restaurantId });
+        res.status(200).send(categories);
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send({ error: 'Error fetching categories' });
+    }
+};
+
 module.exports = {
     createCategory,
     getCategoriesByUser,
     updateCategory,
+    getCategoriesByRestaurantAndUser // Add this export
 };

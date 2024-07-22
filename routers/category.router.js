@@ -6,5 +6,6 @@ const CategoryController = require('../controller/category.controller');
 router.post('/categories', authenticate, CategoryController.createCategory);
 router.get('/categories', authenticate, CategoryController.getCategoriesByUser);
 router.put('/categories/:id', authenticate, CategoryController.updateCategory); // Ensure the route is correct
+router.get('/categories/:restaurantId/:userId', authenticate, CategoryController.getCategoriesByRestaurantAndUser);
 
 module.exports = router;

@@ -30,7 +30,23 @@ const getCategoriesByUser = async (req, res) => {
     }
 };
 
+const updateCategory = async (req, res) => {
+    const categoryId = req.params.id;
+    const { name, image } = req.body;
+    try {
+        const category = await CategoryModel.findByIdAndUpdate(categoryId, { name, image }, { new: true });
+        if (!category) {
+            return res.status(404).send({ error: 'Category not found' });
+        }
+        res.status(200).send(category);
+    } catch (error) {
+        console.log('Error updating category:', error); // Log the error
+        res.status(500).send({ error: 'Error updating category' });
+    }
+};
+
 module.exports = {
     createCategory,
     getCategoriesByUser,
+    updateCategory,
 };

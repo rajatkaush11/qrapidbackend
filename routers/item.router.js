@@ -6,5 +6,6 @@ const ItemController = require('../controller/item.controller');
 
 router.post('/items', authenticate, upload.single('image'), ItemController.createItem);
 router.get('/items/:categoryId', authenticate, ItemController.getItemsByCategory);
+router.delete('/items/:id', authenticate, ItemController.deleteItem); // Add this route
 
 module.exports = router;

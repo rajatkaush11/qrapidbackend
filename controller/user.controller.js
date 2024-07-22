@@ -1,29 +1,3 @@
-const UserServices = require('../services/user.services');
-const UserModel = require('../model/user.model');
-
-exports.register = async (req, res, next) => {
-    try {
-        const { email, password, restaurantName, address, description, timing } = req.body;
-        console.log('Registration Data:', { email, password, restaurantName, address, description, timing });
-        const duplicate = await UserServices.getUserByEmail(email);
-        if (duplicate) {
-            return res.status(400).json({ message: `User ${email} already registered` });
-        }
-
-        const user = await UserServices.registerUser(email, password, {
-            name: restaurantName,
-            address,
-            description,
-            timing,
-        });
-
-        res.json({ status: true, success: 'User and Restaurant registered successfully' });
-    } catch (err) {
-        console.log(err);
-        next(err);
-    }
-};
-
 exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
@@ -54,44 +28,9 @@ exports.login = async (req, res, next) => {
         user.token = token;
         await user.save();
 
-        res.status(200).json({ status: true, success: "Login successful", token: token });
+        res.status(200).json({ status: true, success: "Login successful", token: token, userId: user._id });
     } catch (error) {
         console.log(error);
-        next(error);
-    }
-};
-exports.getTokenByUserId = async (req, res, next) => {
-    try {
-        const user = await UserModel.findById(req.params.userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        res.status(200).json({ token: user.token });
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-};
-
-exports.getUsers = async (req, res, next) => {
-    try {
-        const users = await UserModel.find({}, '_id email');
-        res.status(200).json(users);
-    } catch (error) {
-        console.log(error);
-        next(error);
-    }
-};
-
-exports.getRestaurantDetailsByUserId = async (req, res, next) => {
-    try {
-        const user = await UserModel.findById(req.user._id, 'restaurantDetails');
-        if (!user || !user.restaurantDetails) {
-            return res.status(404).send({ error: 'Restaurant not found' });
-        }
-        res.status(200).send(user.restaurantDetails);
-    } catch (error) {
-        console.error(error);
         next(error);
     }
 };

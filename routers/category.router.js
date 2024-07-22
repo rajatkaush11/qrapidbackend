@@ -4,5 +4,6 @@ const authenticate = require('../middleware/authenticate');
 const CategoryController = require('../controller/category.controller');
 
 router.post('/categories', authenticate, CategoryController.createCategory);
+router.get('/categories', authenticate, CategoryController.getCategoriesByUser);
 
 module.exports = router;

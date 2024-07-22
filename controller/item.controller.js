@@ -63,30 +63,8 @@ const getItemsByCategory = async (req, res) => {
         res.status(400).send({ error: 'Error fetching items' });
     }
 };
-const deleteItem = async (req, res) => {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).send({ error: 'Invalid item ID' });
-    }
-
-    try {
-        const item = await ItemModel.findByIdAndDelete(id);
-
-        if (!item) {
-            return res.status(404).send({ error: 'Item not found' });
-        }
-
-        res.status(200).send({ message: 'Item deleted successfully' });
-    } catch (error) {
-        console.error("Failed to delete item:", error);
-        res.status(500).send({ error: 'Error deleting item' });
-    }
-};
 
 module.exports = {
     createItem,
-    getItemsByCategory,
-    deleteItem // Add the delete function here
+    getItemsByCategory
 };
-

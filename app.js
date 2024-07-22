@@ -9,7 +9,7 @@ const itemRouter = require('./routers/item.router');
 require('dotenv').config();
 
 const app = express();
-const allowedOrigins = ['https://qrapidwebsite.vercel.app'];
+const allowedOrigins = ['https://qrapidwebsite.vercel.app', 'https://digitalmenu-rouge.vercel.app']; // Add your frontend URL here
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -39,6 +39,5 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ error: err.message });
 });
-
 
 module.exports = app;

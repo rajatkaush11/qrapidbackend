@@ -6,10 +6,10 @@ const categorySchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    restaurant: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Restaurant'
+        ref: 'User' // Make sure the reference is correct
     }
 }, {
     timestamps: true

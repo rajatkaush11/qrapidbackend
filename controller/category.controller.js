@@ -1,3 +1,5 @@
+const CategoryModel = require('../model/category.model');
+
 const createCategory = async (req, res) => {
     const { name, userId } = req.body;
     if (!name || !userId) {
@@ -12,17 +14,6 @@ const createCategory = async (req, res) => {
     }
 };
 
-const getCategoriesByUser = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const categories = await CategoryModel.find({ user: userId });
-        res.status(200).send(categories);
-    } catch (error) {
-        res.status(400).send({ error: 'Error fetching categories' });
-    }
-};
-
 module.exports = {
     createCategory,
-    getCategoriesByUser,
 };

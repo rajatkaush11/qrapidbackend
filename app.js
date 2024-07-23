@@ -33,7 +33,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);
-app.use(categoryRouter); // Ensure this line is present
+app.use(categoryRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);

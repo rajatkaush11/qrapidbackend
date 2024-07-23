@@ -22,9 +22,7 @@ const createCategory = async (req, res) => {
 const getCategoriesByUser = async (req, res) => {
     const userId = req.user._id;
     try {
-        console.log('Fetching categories for userId:', userId);
         const categories = await CategoryModel.find({ user: userId });
-        console.log('Fetched categories:', categories);
         res.status(200).send(categories);
     } catch (error) {
         console.log('Error fetching categories:', error);

@@ -1,3 +1,4 @@
+// middleware/authenticate.js
 const jwt = require('jsonwebtoken');
 const UserModel = require('../model/user.model');
 

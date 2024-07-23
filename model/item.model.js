@@ -17,15 +17,15 @@ const itemSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: false  // Set to false if image is optional
+        required: false
     },
     weight: {
         type: Number,
-        required: false  // Set to false if weight is optional
+        required: false
     },
     unit: {
         type: String,
-        required: false  // Set to false if unit is optional
+        required: false
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,

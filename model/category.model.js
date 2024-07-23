@@ -1,3 +1,4 @@
+// models/category.model.js
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
@@ -9,7 +10,7 @@ const categorySchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'User' // Make sure the reference is correct
+        ref: 'User'
     }
 }, {
     timestamps: true

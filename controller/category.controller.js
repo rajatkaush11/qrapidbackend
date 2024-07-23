@@ -59,9 +59,24 @@ const getCategoriesByRestaurantAndUser = async (req, res) => {
     }
 };
 
+const deleteCategory = async (req, res) => {
+    const categoryId = req.params.id;
+    try {
+        const category = await CategoryModel.findByIdAndDelete(categoryId);
+        if (!category) {
+            return res.status(404).send({ error: 'Category not found' });
+        }
+        res.status(200).send({ message: 'Category deleted successfully' });
+    } catch (error) {
+        console.log('Error deleting category:', error);
+        res.status(500).send({ error: 'Error deleting category' });
+    }
+};
+
 module.exports = {
     createCategory,
     getCategoriesByUser,
     updateCategory,
-    getCategoriesByRestaurantAndUser
+    getCategoriesByRestaurantAndUser,
+    deleteCategory
 };

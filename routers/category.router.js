@@ -7,5 +7,6 @@ router.post('/categories', authenticate, CategoryController.createCategory);
 router.get('/categories', authenticate, CategoryController.getCategoriesByUser);
 router.put('/categories/:id', authenticate, CategoryController.updateCategory);
 router.get('/categories/:restaurantId/:userId', authenticate, CategoryController.getCategoriesByRestaurantAndUser);
+router.delete('/categories/:id', authenticate, CategoryController.deleteCategory); // Add this line
 
 module.exports = router;

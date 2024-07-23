@@ -1,4 +1,3 @@
-// app.js
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -35,12 +34,11 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);
 app.use(categoryRouter);
-app.use(itemRouter); // Ensure this line is present
+app.use(itemRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ error: err.message });
 });
-
 
 module.exports = app;

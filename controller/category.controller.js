@@ -1,16 +1,16 @@
 const CategoryModel = require('../model/category.model');
 
 const createCategory = async (req, res) => {
-    const { name, image } = req.body;
+    const { name, image, restaurantId } = req.body; // Ensure restaurantId is part of the request body
     const userId = req.user._id;
 
     console.log('Request body:', req.body);
-    if (!name || !userId) {
-        console.log('Missing name or userId');
-        return res.status(400).send({ error: 'Category name and userId are required' });
+    if (!name || !userId || !restaurantId) {
+        console.log('Missing name, userId, or restaurantId');
+        return res.status(400).send({ error: 'Category name, userId, and restaurantId are required' });
     }
     try {
-        const category = new CategoryModel({ name, user: userId, image });
+        const category = new CategoryModel({ name, user: userId, restaurant: restaurantId, image });
         await category.save();
         res.status(201).send(category);
     } catch (error) {
@@ -18,6 +18,7 @@ const createCategory = async (req, res) => {
         res.status(500).send({ error: 'Error creating category' });
     }
 };
+
 
 const getCategoriesByUser = async (req, res) => {
     const userId = req.user._id;
@@ -51,6 +52,9 @@ const getCategoriesByRestaurantAndUser = async (req, res) => {
     try {
         console.log('Fetching categories for restaurantId:', restaurantId, 'and userId:', userId);
         const categories = await CategoryModel.find({ user: userId, restaurant: restaurantId });
+        if (categories.length === 0) {
+            console.warn('No categories found');
+        }
         console.log('Fetched categories:', categories);
         res.status(200).send(categories);
     } catch (error) {
@@ -58,6 +62,7 @@ const getCategoriesByRestaurantAndUser = async (req, res) => {
         res.status(500).send({ error: 'Error fetching categories' });
     }
 };
+
 
 const deleteCategory = async (req, res) => {
     const categoryId = req.params.id;

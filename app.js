@@ -1,3 +1,4 @@
+// app.js
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -40,5 +41,6 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ error: err.message });
 });
+
 
 module.exports = app;

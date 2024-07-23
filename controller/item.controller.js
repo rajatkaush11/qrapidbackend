@@ -84,7 +84,7 @@ const getItemsByCategoryAndUser = async (req, res) => {
             return res.status(400).send({ error: 'Invalid category ID' });
         }
 
-        const items = await ItemModel.find({ category: categoryId });
+        const items = await ItemModel.find({ category: categoryId, user: userId });
         console.log('Fetched items:', items);
         res.status(200).send(items);
     } catch (error) {

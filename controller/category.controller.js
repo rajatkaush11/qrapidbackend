@@ -2,11 +2,11 @@ const CategoryModel = require('../model/category.model');
 
 const createCategory = async (req, res) => {
     const { name, image } = req.body;
-    const userId = req.user._id; // Retrieve user ID from the authenticated user
+    const userId = req.user._id;
 
-    console.log('Request body:', req.body); // Log the request body
+    console.log('Request body:', req.body);
     if (!name || !userId) {
-        console.log('Missing name or userId'); // Log missing fields
+        console.log('Missing name or userId');
         return res.status(400).send({ error: 'Category name and userId are required' });
     }
     try {
@@ -14,18 +14,18 @@ const createCategory = async (req, res) => {
         await category.save();
         res.status(201).send(category);
     } catch (error) {
-        console.log('Error creating category:', error); // Log the error
+        console.log('Error creating category:', error);
         res.status(500).send({ error: 'Error creating category' });
     }
 };
 
 const getCategoriesByUser = async (req, res) => {
-    const userId = req.user._id; // Retrieve user ID from the authenticated user
+    const userId = req.user._id;
     try {
         const categories = await CategoryModel.find({ user: userId });
         res.status(200).send(categories);
     } catch (error) {
-        console.log('Error fetching categories:', error); // Log the error
+        console.log('Error fetching categories:', error);
         res.status(500).send({ error: 'Error fetching categories' });
     }
 };
@@ -40,15 +40,14 @@ const updateCategory = async (req, res) => {
         }
         res.status(200).send(category);
     } catch (error) {
-        console.log('Error updating category:', error); // Log the error
+        console.log('Error updating category:', error);
         res.status(500).send({ error: 'Error updating category' });
     }
 };
 
-
 const getCategoriesByRestaurantAndUser = async (req, res) => {
     const restaurantId = req.params.restaurantId;
-    const userId = req.params.userId; // Retrieve user ID from the URL parameters
+    const userId = req.params.userId;
     try {
         const categories = await CategoryModel.find({ user: userId, restaurant: restaurantId });
         res.status(200).send(categories);
@@ -62,5 +61,5 @@ module.exports = {
     createCategory,
     getCategoriesByUser,
     updateCategory,
-    getCategoriesByRestaurantAndUser // Add this export
+    getCategoriesByRestaurantAndUser
 };

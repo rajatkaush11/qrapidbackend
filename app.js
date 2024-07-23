@@ -9,7 +9,7 @@ const itemRouter = require('./routers/item.router');
 require('dotenv').config();
 
 const app = express();
-const allowedOrigins = ['https://qrapidwebsite.vercel.app', 'https://digitalmenu-rouge.vercel.app']; // Add your frontend URL here
+const allowedOrigins = ['https://qrapidwebsite.vercel.app', 'https://digitalmenu-rouge.vercel.app'];
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -29,6 +29,7 @@ app.use(cors({
     },
     credentials: true,
 }));
+
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);

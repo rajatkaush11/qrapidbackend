@@ -20,7 +20,7 @@ const createCategory = async (req, res) => {
 };
 
 const getCategoriesByUser = async (req, res) => {
-    const userId = req.user._id;
+    const userId = req.params.userId;
     try {
         const categories = await CategoryModel.find({ user: userId });
         res.status(200).send(categories);

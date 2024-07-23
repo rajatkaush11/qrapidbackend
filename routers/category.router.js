@@ -1,12 +1,12 @@
-// routes/category.router.js
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../middleware/authenticate');
-const CategoryController = require('../controllers/category.controller');
+const CategoryController = require('../controller/category.controller');
 
 router.post('/categories', authenticate, CategoryController.createCategory);
 router.get('/categories', authenticate, CategoryController.getCategoriesByUser);
 router.put('/categories/:id', authenticate, CategoryController.updateCategory);
-router.delete('/categories/:id', authenticate, CategoryController.deleteCategory);
+router.get('/categories/:restaurantId/:userId', authenticate, CategoryController.getCategoriesByRestaurantAndUser);
+router.delete('/categories/:id', authenticate, CategoryController.deleteCategory); // Add this line
 
 module.exports = router;

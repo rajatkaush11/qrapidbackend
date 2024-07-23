@@ -49,7 +49,9 @@ const getCategoriesByRestaurantAndUser = async (req, res) => {
     const restaurantId = req.params.restaurantId;
     const userId = req.params.userId;
     try {
+        console.log('Fetching categories for restaurantId:', restaurantId, 'and userId:', userId);
         const categories = await CategoryModel.find({ user: userId, restaurant: restaurantId });
+        console.log('Fetched categories:', categories);
         res.status(200).send(categories);
     } catch (error) {
         console.error('Error fetching categories:', error);

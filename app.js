@@ -1,4 +1,3 @@
-// app.js
 const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -7,6 +6,7 @@ const path = require('path');
 const userRouter = require('./routers/user.router');
 const categoryRouter = require('./routers/category.router');
 const itemRouter = require('./routers/item.router');
+const restaurantRouter = require('./routers/restaurant.router'); // Add the restaurant router
 require('dotenv').config();
 
 const app = express();
@@ -35,12 +35,12 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);
 app.use(categoryRouter);
-app.use(itemRouter); // Ensure this line is present
+app.use(itemRouter);
+app.use(restaurantRouter); // Include the restaurant routes
 
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ error: err.message });
 });
-
 
 module.exports = app;

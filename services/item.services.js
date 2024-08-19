@@ -17,6 +17,22 @@ class ItemServices {
             throw err;
         }
     }
+
+    static async updateItem(id, details) {
+        try {
+            return await ItemModel.findByIdAndUpdate(id, details, { new: true });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async deleteItem(id) {
+        try {
+            return await ItemModel.findByIdAndDelete(id);
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = ItemServices;

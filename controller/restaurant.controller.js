@@ -43,19 +43,20 @@ const createRestaurant = async (req, res) => {
 };
 
 const getRestaurantByUid = async (req, res) => {
-  const { uid } = req.params;
-
-  try {
-    const restaurant = await RestaurantModel.findOne({ uid }, 'restaurantName');
-    if (!restaurant) {
-      return res.status(404).send({ error: 'Restaurant not found' });
+    const { uid } = req.params;
+  
+    try {
+      const restaurant = await RestaurantModel.findOne({ uid }, 'restaurantName bestTimeToken'); // Include bestTimeToken
+      if (!restaurant) {
+        return res.status(404).send({ error: 'Restaurant not found' });
+      }
+      res.status(200).send(restaurant); 
+    } catch (error) {
+      console.error('Error fetching restaurant by UID:', error);
+      res.status(500).send({ error: 'Error fetching restaurant' });
     }
-    res.status(200).send(restaurant); 
-  } catch (error) {
-    console.error('Error fetching restaurant by UID:', error);
-    res.status(500).send({ error: 'Error fetching restaurant' });
-  }
-};
+  };
+  
 
 module.exports = {
   createRestaurant,

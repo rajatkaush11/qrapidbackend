@@ -3,7 +3,11 @@ const RestaurantModel = require('../model/restaurant.model');
 const createRestaurant = async (req, res) => {
   const { uid, restaurantName, address, description, timing, email, imageUrl } = req.body;
 
+  // Debugging: Log incoming request body
+  console.log('Incoming request body:', req.body);
+
   if (!uid || !restaurantName || !address || !description || !timing || !email) {
+    console.error('Missing fields in the request body');
     return res.status(400).send({ error: 'All fields are required' });
   }
 

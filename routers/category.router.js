@@ -5,7 +5,7 @@ const CategoryController = require('../controller/category.controller');
 
 // Routes for managing categories
 router.post('/category', authenticate, CategoryController.createCategory); // Create a new category
-router.get('/categories/:userId', authenticate, CategoryController.getCategoriesByUser); // Get all categories by user ID
+router.get('/categories/:uid', authenticate, CategoryController.getCategoriesByRestaurant); // Get all categories by restaurant UID
 router.put('/category/:id', authenticate, CategoryController.updateCategory); // Update a category
 router.delete('/category/:id', authenticate, CategoryController.deleteCategory); // Delete a category
 

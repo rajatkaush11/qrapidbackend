@@ -2,15 +2,14 @@ const CategoryModel = require('../model/category.model');
 
 // Create a new category
 const createCategory = async (req, res) => {
-    const { name, image } = req.body;
-    const userId = req.body.uid;  // Receive UID from the frontend
+    const { name, image, uid } = req.body;
 
-    if (!name || !userId) {
-        return res.status(400).send({ error: 'Category name and userId are required' });
+    if (!name || !uid) {
+        return res.status(400).send({ error: 'Category name and restaurant UID are required' });
     }
 
     try {
-        const category = new CategoryModel({ name, user: userId, image });
+        const category = new CategoryModel({ name, image, restaurantUid: uid });
         await category.save();
         res.status(201).send(category);
     } catch (error) {
@@ -19,11 +18,11 @@ const createCategory = async (req, res) => {
     }
 };
 
-// Get categories by user ID
-const getCategoriesByUser = async (req, res) => {
-    const userId = req.params.userId;
+// Get categories by restaurant UID
+const getCategoriesByRestaurant = async (req, res) => {
+    const { uid } = req.params;
     try {
-        const categories = await CategoryModel.find({ user: userId });
+        const categories = await CategoryModel.find({ restaurantUid: uid });
         res.status(200).send(categories);
     } catch (error) {
         console.error('Error fetching categories:', error);
@@ -64,7 +63,7 @@ const deleteCategory = async (req, res) => {
 
 module.exports = {
     createCategory,
-    getCategoriesByUser,
+    getCategoriesByRestaurant,
     updateCategory,
     deleteCategory
 };

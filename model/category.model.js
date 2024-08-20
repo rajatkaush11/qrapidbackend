@@ -4,17 +4,21 @@ const categorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
     },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
+    image: {
+        type: String,
+        trim: true,
+    },
+    restaurantUid: {
+        type: String,
         required: true,
-        ref: 'User' // Make sure the reference is correct
-    }
+        ref: 'Restaurant', // Assuming you have a reference to the Restaurant model
+    },
 }, {
-    timestamps: true
+    timestamps: true,
 });
 
-const Category = mongoose.model('Category', categorySchema);
+const CategoryModel = mongoose.model('Category', categorySchema);
 
-module.exports = Category;
+module.exports = CategoryModel;

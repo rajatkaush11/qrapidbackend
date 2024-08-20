@@ -36,6 +36,14 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  bestTimeToken: {
+    type: String,
+    required: true,
+  },
+  tokenValidUntil: {
+    type: Date,
+    required: true,
+  }
 }, {
   timestamps: true,
 });

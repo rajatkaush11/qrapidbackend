@@ -1,4 +1,12 @@
 const RestaurantModel = require('../model/restaurant.model');
+const crypto = require('crypto');
+
+const generateBestTimeToken = () => {
+  const token = crypto.randomBytes(16).toString('hex');
+  const validPeriod = new Date();
+  validPeriod.setDate(validPeriod.getDate() + 30); 
+  return { token, validPeriod };
+};
 
 const createRestaurant = async (req, res) => {
   const { uid, restaurantName, address, description, timing, email, imageUrl } = req.body;
@@ -11,6 +19,8 @@ const createRestaurant = async (req, res) => {
   }
 
   try {
+    const { token, validPeriod } = generateBestTimeToken(); 
+
     const newRestaurant = new RestaurantModel({
       uid,
       restaurantName,
@@ -19,6 +29,8 @@ const createRestaurant = async (req, res) => {
       timing,
       email,
       imageUrl,
+      bestTimeToken: token,
+      tokenValidUntil: validPeriod
     });
 
     await newRestaurant.save();
@@ -34,11 +46,11 @@ const getRestaurantByUid = async (req, res) => {
   const { uid } = req.params;
 
   try {
-    const restaurant = await RestaurantModel.findOne({ uid }, 'restaurantName'); // Fetch only restaurantName
+    const restaurant = await RestaurantModel.findOne({ uid }, 'restaurantName');
     if (!restaurant) {
       return res.status(404).send({ error: 'Restaurant not found' });
     }
-    res.status(200).send(restaurant); // Send only the restaurant name
+    res.status(200).send(restaurant); 
   } catch (error) {
     console.error('Error fetching restaurant by UID:', error);
     res.status(500).send({ error: 'Error fetching restaurant' });
@@ -47,5 +59,5 @@ const getRestaurantByUid = async (req, res) => {
 
 module.exports = {
   createRestaurant,
-  getRestaurantByUid, // Ensure this function is exported
+  getRestaurantByUid, 
 };

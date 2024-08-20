@@ -12,7 +12,6 @@ require('dotenv').config();
 const app = express();
 const allowedOrigins = ['https://qr-dashboard-1107.web.app', 'https://digitalmenu-rouge.vercel.app'];
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('MongoDB Connected');
@@ -21,7 +20,6 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
         console.error('MongoDB Connection error:', err);
     });
 
-// Middleware
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -38,9 +36,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(userRouter);
 app.use(categoryRouter);
 app.use(itemRouter);
-app.use(restaurantRouter); // Include the restaurant routes
+app.use(restaurantRouter);
 
-// Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Global error handler:', err);
     res.status(500).json({ error: err.message });

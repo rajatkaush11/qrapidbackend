@@ -15,10 +15,11 @@ const createRestaurant = async (req, res) => {
       description,
       timing,
       email,
-      imageUrl
+      imageUrl,
     });
 
     await newRestaurant.save();
+    console.log('Restaurant details saved to MongoDB successfully');
     res.status(201).send(newRestaurant);
   } catch (error) {
     console.error('Error creating restaurant:', error);
@@ -27,5 +28,5 @@ const createRestaurant = async (req, res) => {
 };
 
 module.exports = {
-  createRestaurant
+  createRestaurant,
 };

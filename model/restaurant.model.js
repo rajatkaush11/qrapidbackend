@@ -4,40 +4,40 @@ const restaurantSchema = new mongoose.Schema({
   uid: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   restaurantName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   address: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   timing: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    trim: true
+    trim: true,
   },
   imageUrl: {
     type: String,
-    trim: true
-  }
+    trim: true,
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 const RestaurantModel = mongoose.model('Restaurant', restaurantSchema);

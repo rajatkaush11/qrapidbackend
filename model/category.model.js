@@ -13,7 +13,12 @@ const categorySchema = new mongoose.Schema({
     restaurantUid: {
         type: String,
         required: true,
-        ref: 'Restaurant', // Assuming you have a reference to the Restaurant model
+        ref: 'Restaurant',
+    },
+    restaurantName: {
+        type: String,
+        required: true,
+        trim: true,
     },
 }, {
     timestamps: true,

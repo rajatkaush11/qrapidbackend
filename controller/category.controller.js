@@ -2,9 +2,10 @@ const CategoryModel = require('../model/category.model');
 const RestaurantModel = require('../model/restaurant.model');
 
 // Create a new category for the specified restaurant UID
+// Create a new category for the specified restaurant UID
 const createCategory = async (req, res) => {
     const { name, image } = req.body;
-    const { uid } = req.restaurant; // Extracted from the authenticated restaurant
+    const { uid, restaurantName } = req.restaurant; // Extracted from the authenticated restaurant
 
     if (!name || !uid) {
         return res.status(400).send({ error: 'Category name and restaurant UID are required' });
@@ -12,7 +13,7 @@ const createCategory = async (req, res) => {
 
     try {
         // Create and save the new category
-        const category = new CategoryModel({ name, image, restaurantUid: uid });
+        const category = new CategoryModel({ name, image, restaurantUid: uid, restaurantName });
         await category.save();
         res.status(201).send(category);
     } catch (error) {

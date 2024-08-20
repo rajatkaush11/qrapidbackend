@@ -3,7 +3,6 @@ const RestaurantModel = require('../model/restaurant.model');
 const createRestaurant = async (req, res) => {
   const { uid, restaurantName, address, description, timing, email, imageUrl } = req.body;
 
-  // Debugging: Log incoming request body
   console.log('Incoming request body:', req.body);
 
   if (!uid || !restaurantName || !address || !description || !timing || !email) {
@@ -31,6 +30,22 @@ const createRestaurant = async (req, res) => {
   }
 };
 
+const getRestaurantByUid = async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const restaurant = await RestaurantModel.findOne({ uid }, 'restaurantName'); // Fetch only restaurantName
+    if (!restaurant) {
+      return res.status(404).send({ error: 'Restaurant not found' });
+    }
+    res.status(200).send(restaurant); // Send only the restaurant name
+  } catch (error) {
+    console.error('Error fetching restaurant by UID:', error);
+    res.status(500).send({ error: 'Error fetching restaurant' });
+  }
+};
+
 module.exports = {
   createRestaurant,
+  getRestaurantByUid, // Ensure this function is exported
 };

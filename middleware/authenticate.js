@@ -1,25 +1,30 @@
-const jwt = require('jsonwebtoken');
-const UserModel = require('../model/user.model');
+const RestaurantModel = require('../model/restaurant.model');
 
 const authenticate = async (req, res, next) => {
-    const authHeader = req.header('Authorization');
-    if (!authHeader) {
-        return res.status(401).json({ message: 'Authorization header missing' });
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
     }
 
-    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await UserModel.findById(decoded._id);
+        const restaurant = await RestaurantModel.findOne({ bestTimeToken: token });
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (!restaurant) {
+            return res.status(401).json({ message: 'Invalid token' });
         }
 
-        req.user = user;
-        next();
+        const currentDateTime = new Date();
+        if (currentDateTime > new Date(restaurant.tokenValidUntil)) {
+            return res.status(401).json({ message: 'Token expired' });
+        }
+
+        req.restaurant = restaurant; // Store the restaurant info (UID) in the request object
+        next(); // Continue to the next middleware or route handler
     } catch (error) {
-        return res.status(401).json({ message: 'Invalid token' });
+        console.error('Error in authentication:', error);
+        res.status(500).json({ message: 'Server error during authentication' });
     }
 };
 

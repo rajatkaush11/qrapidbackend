@@ -2,7 +2,6 @@ const CategoryModel = require('../model/category.model');
 const RestaurantModel = require('../model/restaurant.model');
 
 // Create a new category for the specified restaurant UID
-// Create a new category for the specified restaurant UID
 const createCategory = async (req, res) => {
     const { name, image } = req.body;
     const { uid, restaurantName } = req.restaurant; // Extracted from the authenticated restaurant

@@ -1,36 +1,25 @@
 const CategoryModel = require('../model/category.model');
 const RestaurantModel = require('../model/restaurant.model');
 
-// Validate the token before performing category operations
-const validateToken = async (uid, token) => {
-    const restaurant = await RestaurantModel.findOne({ uid });
-
-    if (!restaurant) {
-        throw new Error('Restaurant not found');
-    }
-
-    const currentTime = new Date();
-    if (restaurant.bestTimeToken !== token || restaurant.tokenValidUntil < currentTime) {
-        throw new Error('Invalid or expired token');
-    }
-
-    return restaurant;
-};
-
-// Create a new category
+// Create a new category for the specified restaurant UID
 const createCategory = async (req, res) => {
-    const { name, image, uid, token } = req.body;
+    const { name, image, uid } = req.body;
 
     console.log('Received request:', req.body);
 
-    if (!name || !uid || !token) {
-        console.error('Validation error: Category name, restaurant UID, and token are required');
-        return res.status(400).send({ error: 'Category name, restaurant UID, and token are required' });
+    if (!name || !uid) {
+        console.error('Validation error: Category name and restaurant UID are required');
+        return res.status(400).send({ error: 'Category name and restaurant UID are required' });
     }
 
     try {
-        await validateToken(uid, token);  // Validate token before proceeding
+        // Check if the restaurant UID exists
+        const restaurant = await RestaurantModel.findOne({ uid });
+        if (!restaurant) {
+            return res.status(404).send({ error: 'Restaurant not found' });
+        }
 
+        // Create and save the new category
         const category = new CategoryModel({ name, image, restaurantUid: uid });
         await category.save();
         console.log('Category saved successfully:', category);
@@ -46,6 +35,7 @@ const getCategoriesByRestaurant = async (req, res) => {
     const { uid } = req.params;
 
     try {
+        // Fetch categories associated with the provided restaurant UID
         const categories = await CategoryModel.find({ restaurantUid: uid });
         if (!categories.length) {
             return res.status(404).send({ error: 'No categories found for this restaurant' });
@@ -60,18 +50,18 @@ const getCategoriesByRestaurant = async (req, res) => {
 // Update a category by its ID
 const updateCategory = async (req, res) => {
     const categoryId = req.params.id;
-    const { name, image, uid, token } = req.body;
-
-    if (!uid || !token) {
-        return res.status(400).send({ error: 'Restaurant UID and token are required for updating category' });
-    }
+    const { name, image, uid } = req.body;
 
     try {
-        await validateToken(uid, token);  // Validate token before proceeding
+        // Ensure that the category belongs to the provided restaurant UID
+        const category = await CategoryModel.findOneAndUpdate(
+            { _id: categoryId, restaurantUid: uid },
+            { name, image },
+            { new: true }
+        );
 
-        const category = await CategoryModel.findByIdAndUpdate(categoryId, { name, image }, { new: true });
         if (!category) {
-            return res.status(404).send({ error: 'Category not found' });
+            return res.status(404).send({ error: 'Category not found or does not belong to this restaurant' });
         }
         res.status(200).send(category);
     } catch (error) {
@@ -83,18 +73,14 @@ const updateCategory = async (req, res) => {
 // Delete a category by its ID
 const deleteCategory = async (req, res) => {
     const categoryId = req.params.id;
-    const { uid, token } = req.body;
-
-    if (!uid || !token) {
-        return res.status(400).send({ error: 'Restaurant UID and token are required for deleting category' });
-    }
+    const { uid } = req.body;
 
     try {
-        await validateToken(uid, token);  // Validate token before proceeding
+        // Ensure that the category belongs to the provided restaurant UID
+        const category = await CategoryModel.findOneAndDelete({ _id: categoryId, restaurantUid: uid });
 
-        const category = await CategoryModel.findByIdAndDelete(categoryId);
         if (!category) {
-            return res.status(404).send({ error: 'Category not found' });
+            return res.status(404).send({ error: 'Category not found or does not belong to this restaurant' });
         }
         res.status(200).send({ message: 'Category deleted successfully' });
     } catch (error) {

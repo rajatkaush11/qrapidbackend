@@ -5,7 +5,7 @@ const CategoryModel = require('../model/category.model');
 // Create a new item
 const createItem = async (req, res) => {
     const { name, price, description, categoryId, weight, unit, variations, image = '' } = req.body;
-
+    
     console.log("Incoming item data:", req.body); // Debugging incoming data
 
     if (!name || !price || !description || !categoryId) {
@@ -45,24 +45,24 @@ const createItem = async (req, res) => {
 // Get items by category ID and user ID
 const getItemsByCategory = async (req, res) => {
     const { categoryId, uid } = req.params;
-
+  
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-        return res.status(400).send({ error: 'Invalid category ID' });
+      return res.status(400).send({ error: 'Invalid category ID' });
     }
-
+  
     try {
-        const items = await ItemModel.find({ category: categoryId });
-
-        if (!items.length) {
-            return res.status(404).send({ error: 'No items found for this category' });
-        }
-
-        res.status(200).send(items);
+      const items = await ItemModel.find({ category: categoryId });
+      
+      if (!items.length) {
+        return res.status(404).send({ error: 'No items found for this category' });
+      }
+  
+      res.status(200).send(items);
     } catch (error) {
-        console.error("Failed to fetch items:", error.message);
-        res.status(500).send({ error: 'Error fetching items', details: error.message });
+      console.error("Failed to fetch items:", error.message);
+      res.status(500).send({ error: 'Error fetching items', details: error.message });
     }
-};
+  };
 
 // Update an item by its ID
 const updateItem = async (req, res) => {

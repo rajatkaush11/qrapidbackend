@@ -1,18 +1,23 @@
 const CategoryModel = require('../model/category.model');
 const RestaurantModel = require('../model/restaurant.model');
+const { validateToken } = require('./restaurant.controller'); // Import token validation function
 
 // Create a new category for the specified restaurant UID
 const createCategory = async (req, res) => {
     const { name, image } = req.body;
-    const { uid, restaurantName } = req.restaurant; // Extracted from the authenticated restaurant
+    const { uid } = req.restaurant; // Extracted from the authenticated restaurant
 
     if (!name || !uid) {
         return res.status(400).send({ error: 'Category name and restaurant UID are required' });
     }
 
     try {
+        // Validate and refresh token if necessary
+        const restaurant = await RestaurantModel.findOne({ uid });
+        await validateToken(restaurant);
+
         // Create and save the new category
-        const category = new CategoryModel({ name, image, restaurantUid: uid, restaurantName });
+        const category = new CategoryModel({ name, image, restaurantUid: uid, restaurantName: restaurant.restaurantName });
         await category.save();
         res.status(201).send(category);
     } catch (error) {

@@ -55,8 +55,7 @@ const getRestaurantByUid = async (req, res) => {
       console.error('Error fetching restaurant by UID:', error);
       res.status(500).send({ error: 'Error fetching restaurant' });
     }
-  };
-  
+};
 
 module.exports = {
   createRestaurant,

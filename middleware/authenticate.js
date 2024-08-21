@@ -20,8 +20,8 @@ const authenticate = async (req, res, next) => {
             return res.status(401).json({ message: 'Token expired' });
         }
 
-        req.restaurant = restaurant; // Store the restaurant info (UID) in the request object
-        next(); // Continue to the next middleware or route handler
+        req.restaurant = restaurant;
+        next(); 
     } catch (error) {
         console.error('Error in authentication:', error);
         res.status(500).json({ message: 'Server error during authentication' });

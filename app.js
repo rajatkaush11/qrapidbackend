@@ -3,11 +3,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
+
+// Routers
 const userRouter = require('./routers/user.router');
 const categoryRouter = require('./routers/category.router');
 const itemRouter = require('./routers/item.router');
 const restaurantRouter = require('./routers/restaurant.router');
-require('dotenv').config();
+const orderRouter = require('./routers/order.router');  // Import order router
 
 const app = express();
 const allowedOrigins = ['https://qr-dashboard-1107.web.app', 'https://digitalmenu-rouge.vercel.app'];
@@ -33,11 +36,15 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Use Routers
 app.use(userRouter);
 app.use(categoryRouter);
 app.use(itemRouter);
 app.use(restaurantRouter);
+app.use(orderRouter);  // Add order router
 
+// Global Error Handler
 app.use((err, req, res, next) => {
     console.error('Global error handler:', err);
     res.status(500).json({ error: err.message });

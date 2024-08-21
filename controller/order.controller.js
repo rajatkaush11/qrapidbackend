@@ -1,25 +1,26 @@
-const Order = require('../models/order.model');
+const OrderModel = require('../model/order.model');
 
+// Create a new order
 const createOrder = async (req, res) => {
-    try {
-        const { name, whatsapp, restaurantName, tableNo, items } = req.body;
+    const { name, whatsapp, tableNo, items } = req.body;
 
-        // Creating a new order
-        const newOrder = new Order({
+    if (!name || !whatsapp || !items.length) {
+        return res.status(400).send({ error: 'Name, WhatsApp number, and order details are required' });
+    }
+
+    try {
+        const newOrder = new OrderModel({
             name,
             whatsapp,
-            restaurantName,
-            tableNo,
-            items,
+            restaurantName: "Your Restaurant Name", // You can customize this or get it from request
+            orderDetails: items
         });
 
-        // Save the order in MongoDB
-        const savedOrder = await newOrder.save();
-
-        res.status(201).json({ message: 'Order placed successfully', order: savedOrder });
+        await newOrder.save();
+        res.status(201).send(newOrder);
     } catch (error) {
-        console.error('Error placing order:', error);
-        res.status(500).json({ error: 'Failed to place order' });
+        console.error('Error creating order:', error.message);
+        res.status(500).send({ error: 'Error creating order', details: error.message });
     }
 };
 

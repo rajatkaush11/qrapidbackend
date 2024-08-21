@@ -1,41 +1,54 @@
 const mongoose = require('mongoose');
 
+// Helper function to get the current time in IST
+const getCurrentISTTime = () => {
+    const now = new Date();
+    const istOffset = 5 * 60 + 30; // IST is UTC +5:30
+    const istTime = new Date(now.getTime() + istOffset * 60 * 1000);
+    return istTime;
+};
+
 const orderSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true,
+        trim: true
     },
     whatsapp: {
         type: String,
         required: true,
-        trim: true,
+        trim: true
     },
     restaurantName: {
         type: String,
         required: true,
+        trim: true
     },
-    tableNo: {
-        type: String,
-        required: true,
-    },
-    items: [
-        {
-            name: String,
-            price: Number,
-            quantity: Number,
-        },
-    ],
-    dateTime: {
+    date: {
         type: Date,
-        default: () => {
-            // Convert to Indian Standard Time (IST)
-            const offset = 5.5 * 60 * 60 * 1000;
-            return new Date(Date.now() + offset);
-        },
+        default: getCurrentISTTime  // Use IST as default date
     },
+    orderDetails: [
+        {
+            name: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            price: {
+                type: Number,
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            }
+        }
+    ]
+}, {
+    timestamps: true
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const OrderModel = mongoose.model('Order', orderSchema);
 
-module.exports = Order;
+module.exports = OrderModel;

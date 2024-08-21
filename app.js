@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
         console.log('MongoDB Connected');
     })
     .catch(err => {
-        console.error('MongoDB Connection error:', err);
+        console.error('MongoDB Connection error:', err.message);
     });
 
 app.use(cors({
@@ -41,7 +41,7 @@ app.use(restaurantRouter);
 app.use(orderRouter); // Use the order router
 
 app.use((err, req, res, next) => {
-    console.error('Global error handler:', err);
+    console.error('Global error handler:', err.message);
     res.status(500).json({ error: err.message });
 });
 

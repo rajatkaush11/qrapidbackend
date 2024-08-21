@@ -6,7 +6,7 @@ const CategoryModel = require('../model/category.model');
 const createItem = async (req, res) => {
     const { name, price, description, categoryId, weight, unit, variations, image = '' } = req.body;
     
-    console.log("Incoming item data:", req.body); // Debugging incoming data
+    console.log("Incoming item data:", req.body);
 
     if (!name || !price || !description || !categoryId) {
         return res.status(400).send({ error: 'Name, price, description, and categoryId are required' });
@@ -33,36 +33,36 @@ const createItem = async (req, res) => {
             variations: variations || [],
         });
 
-        console.log("Saving new item:", newItem); // Debugging item before saving
+        console.log("Saving new item:", newItem);
         await newItem.save();
         res.status(201).send(newItem);
     } catch (error) {
-        console.error("Failed to create item:", error);
-        res.status(500).send({ error: 'Error creating item' });
+        console.error("Failed to create item:", error.message);
+        res.status(500).send({ error: 'Error creating item', details: error.message });
     }
 };
 
-// Get items by category ID and user ID
+// Get items by category ID
 const getItemsByCategory = async (req, res) => {
-    const { categoryId, uid } = req.params;
-  
+    const { categoryId } = req.params;
+
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-      return res.status(400).send({ error: 'Invalid category ID' });
+        return res.status(400).send({ error: 'Invalid category ID' });
     }
-  
+
     try {
-      const items = await ItemModel.find({ category: categoryId });
-      
-      if (!items.length) {
-        return res.status(404).send({ error: 'No items found for this category' });
-      }
-  
-      res.status(200).send(items);
+        const items = await ItemModel.find({ category: categoryId });
+        
+        if (!items.length) {
+            return res.status(404).send({ error: 'No items found for this category' });
+        }
+
+        res.status(200).send(items);
     } catch (error) {
-      console.error("Failed to fetch items:", error.message);
-      res.status(500).send({ error: 'Error fetching items', details: error.message });
+        console.error("Failed to fetch items:", error.message);
+        res.status(500).send({ error: 'Error fetching items', details: error.message });
     }
-  };
+};
 
 // Update an item by its ID
 const updateItem = async (req, res) => {
@@ -90,8 +90,8 @@ const updateItem = async (req, res) => {
         await item.save();
         res.status(200).send(item);
     } catch (error) {
-        console.error("Failed to update item:", error);
-        res.status(500).send({ error: 'Error updating item' });
+        console.error("Failed to update item:", error.message);
+        res.status(500).send({ error: 'Error updating item', details: error.message });
     }
 };
 
@@ -111,8 +111,8 @@ const deleteItem = async (req, res) => {
 
         res.status(200).send({ message: 'Item deleted successfully' });
     } catch (error) {
-        console.error("Failed to delete item:", error);
-        res.status(500).send({ error: 'Error deleting item' });
+        console.error("Failed to delete item:", error.message);
+        res.status(500).send({ error: 'Error deleting item', details: error.message });
     }
 };
 

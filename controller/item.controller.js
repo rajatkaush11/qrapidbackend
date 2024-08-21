@@ -42,9 +42,9 @@ const createItem = async (req, res) => {
     }
 };
 
-// Get items by category ID
+// Get items by category ID and user ID
 const getItemsByCategory = async (req, res) => {
-    const { categoryId } = req.params;
+    const { categoryId, uid } = req.params;
   
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       return res.status(400).send({ error: 'Invalid category ID' });
@@ -52,6 +52,7 @@ const getItemsByCategory = async (req, res) => {
   
     try {
       const items = await ItemModel.find({ category: categoryId });
+      
       if (!items.length) {
         return res.status(404).send({ error: 'No items found for this category' });
       }
@@ -62,7 +63,6 @@ const getItemsByCategory = async (req, res) => {
       res.status(500).send({ error: 'Error fetching items', details: error.message });
     }
   };
-  
 
 // Update an item by its ID
 const updateItem = async (req, res) => {

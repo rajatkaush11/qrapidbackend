@@ -1,3 +1,5 @@
+// controller/order.controller.js
+
 const OrderModel = require('../model/order.model');
 
 // Create a new order
@@ -12,7 +14,7 @@ const createOrder = async (req, res) => {
         const newOrder = new OrderModel({
             name,
             whatsapp,
-            restaurantName: "Your Restaurant Name", // You can customize this or get it from request
+            restaurantName: "Your Restaurant Name", // Customize or retrieve this as needed
             orderDetails: items
         });
 

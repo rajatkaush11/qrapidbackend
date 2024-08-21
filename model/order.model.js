@@ -1,3 +1,5 @@
+// model/order.model.js
+
 const mongoose = require('mongoose');
 
 // Helper function to get the current time in IST
@@ -26,7 +28,7 @@ const orderSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: getCurrentISTTime  // Use IST as default date
+        default: getCurrentISTTime  // Default to IST
     },
     orderDetails: [
         {

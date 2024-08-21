@@ -7,7 +7,6 @@ const userRouter = require('./routers/user.router');
 const categoryRouter = require('./routers/category.router');
 const itemRouter = require('./routers/item.router');
 const restaurantRouter = require('./routers/restaurant.router');
-const orderRouter = require('./routers/order.router'); // Import the order router
 require('dotenv').config();
 
 const app = express();
@@ -18,7 +17,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
         console.log('MongoDB Connected');
     })
     .catch(err => {
-        console.error('MongoDB Connection error:', err.message);
+        console.error('MongoDB Connection error:', err);
     });
 
 app.use(cors({
@@ -38,10 +37,9 @@ app.use(userRouter);
 app.use(categoryRouter);
 app.use(itemRouter);
 app.use(restaurantRouter);
-app.use(orderRouter); // Use the order router
 
 app.use((err, req, res, next) => {
-    console.error('Global error handler:', err.message);
+    console.error('Global error handler:', err);
     res.status(500).json({ error: err.message });
 });
 

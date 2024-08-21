@@ -37,8 +37,8 @@ const createRestaurant = async (req, res) => {
     console.log('Restaurant details saved to MongoDB successfully');
     res.status(201).send(newRestaurant);
   } catch (error) {
-    console.error('Error creating restaurant:', error.message);
-    res.status(500).send({ error: 'Error creating restaurant', details: error.message });
+    console.error('Error creating restaurant:', error);
+    res.status(500).send({ error: 'Error creating restaurant' });
   }
 };
 
@@ -52,8 +52,8 @@ const getRestaurantByUid = async (req, res) => {
       }
       res.status(200).send(restaurant); 
     } catch (error) {
-      console.error('Error fetching restaurant by UID:', error.message);
-      res.status(500).send({ error: 'Error fetching restaurant', details: error.message });
+      console.error('Error fetching restaurant by UID:', error);
+      res.status(500).send({ error: 'Error fetching restaurant' });
     }
 };
 

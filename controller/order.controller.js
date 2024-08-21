@@ -18,8 +18,8 @@ const createOrder = async (req, res) => {
 
         res.status(201).json({ message: 'Order placed successfully', order: savedOrder });
     } catch (error) {
-        console.error('Error placing order:', error.message);
-        res.status(500).json({ error: 'Failed to place order', details: error.message });
+        console.error('Error placing order:', error);
+        res.status(500).json({ error: 'Failed to place order' });
     }
 };
 

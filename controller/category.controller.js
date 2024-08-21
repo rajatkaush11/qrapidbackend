@@ -26,19 +26,19 @@ const getCategoriesByRestaurant = async (req, res) => {
     const { uid } = req.params;
 
     try {
-        console.log(`Fetching categories for restaurant UID: ${uid}`);
+        console.log(`Fetching categories for restaurant UID: ${uid}`); // Debug log
 
         const categories = await CategoryModel.find({ restaurantUid: uid });
 
         if (!categories.length) {
-            console.log(`No categories found for restaurant UID: ${uid}`);
+            console.log(`No categories found for restaurant UID: ${uid}`); // Debug log
             return res.status(404).send({ error: 'No categories found for this restaurant' });
         }
 
-        console.log(`Found categories for restaurant UID: ${uid}:`, categories);
+        console.log(`Found categories for restaurant UID: ${uid}:`, categories); // Debug log
         res.status(200).send(categories);
     } catch (error) {
-        console.error('Error fetching categories:', error.message);
+        console.error('Error fetching categories:', error); // Debug log
         res.status(500).send({ error: 'Error fetching categories', details: error.message });
     }
 };

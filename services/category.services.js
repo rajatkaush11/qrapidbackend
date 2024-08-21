@@ -10,13 +10,14 @@ class CategoryServices {
         }
     }
 
-    static async getCategoriesByRestaurant(restaurantId) {
+    static async getCategoriesByRestaurant(restaurantUid) {
         try {
-            return await CategoryModel.find({ restaurant: restaurantId });
+            return await CategoryModel.find({ restaurantUid });
         } catch (err) {
             throw err;
         }
     }
+    
 }
 
 module.exports = CategoryServices;

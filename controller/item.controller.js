@@ -44,15 +44,25 @@ const getItemsByCategory = async (req, res) => {
     const { categoryId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+        console.log(`Invalid category ID: ${categoryId}`); // Debug log
         return res.status(400).send({ error: 'Invalid category ID' });
     }
 
     try {
+        console.log(`Fetching items for category ID: ${categoryId}`); // Debug log
+
         const items = await ItemModel.find({ category: categoryId });
+
+        if (!items.length) {
+            console.log(`No items found for category ID: ${categoryId}`); // Debug log
+            return res.status(404).send({ error: 'No items found for this category' });
+        }
+
+        console.log(`Found items for category ID: ${categoryId}:`, items); // Debug log
         res.status(200).send(items);
     } catch (error) {
-        console.error("Failed to fetch items:", error);
-        res.status(500).send({ error: 'Error fetching items' });
+        console.error("Failed to fetch items:", error); // Debug log
+        res.status(500).send({ error: 'Error fetching items', details: error.message });
     }
 };
 

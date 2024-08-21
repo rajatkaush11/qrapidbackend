@@ -5,6 +5,8 @@ const CategoryModel = require('../model/category.model');
 // Create a new item
 const createItem = async (req, res) => {
     const { name, price, description, categoryId, weight, unit, variations, image = '' } = req.body;
+    
+    console.log("Incoming item data:", req.body); // Debugging incoming data
 
     if (!name || !price || !description || !categoryId) {
         return res.status(400).send({ error: 'Name, price, description, and categoryId are required' });
@@ -31,6 +33,7 @@ const createItem = async (req, res) => {
             variations: variations || [],
         });
 
+        console.log("Saving new item:", newItem); // Debugging item before saving
         await newItem.save();
         res.status(201).send(newItem);
     } catch (error) {

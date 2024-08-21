@@ -52,6 +52,7 @@ const getItemsByCategory = async (req, res) => {
         console.log(`Fetching items for category ID: ${categoryId}`); // Debug log
 
         const items = await ItemModel.find({ category: categoryId });
+        console.log(`Items retrieved: ${items.length}`); // Debug log
 
         if (!items.length) {
             console.log(`No items found for category ID: ${categoryId}`); // Debug log
@@ -65,6 +66,7 @@ const getItemsByCategory = async (req, res) => {
         res.status(500).send({ error: 'Error fetching items', details: error.message });
     }
 };
+
 
 // Update an item by its ID
 const updateItem = async (req, res) => {

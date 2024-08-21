@@ -7,6 +7,7 @@ const userRouter = require('./routers/user.router');
 const categoryRouter = require('./routers/category.router');
 const itemRouter = require('./routers/item.router');
 const restaurantRouter = require('./routers/restaurant.router');
+const orderRouter = require('./routers/order.router'); // Add this line
 require('dotenv').config();
 
 const app = express();
@@ -37,6 +38,7 @@ app.use(userRouter);
 app.use(categoryRouter);
 app.use(itemRouter);
 app.use(restaurantRouter);
+app.use(orderRouter); // Add this line
 
 app.use((err, req, res, next) => {
     console.error('Global error handler:', err);

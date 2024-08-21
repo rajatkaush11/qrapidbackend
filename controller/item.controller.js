@@ -70,7 +70,6 @@ const getItemsByCategory = async (req, res) => {
     }
 };
 
-
 // Update an item by its ID
 const updateItem = async (req, res) => {
     const { id } = req.params;

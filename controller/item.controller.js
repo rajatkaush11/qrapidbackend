@@ -6,9 +6,10 @@ const CategoryModel = require('../model/category.model');
 const createItem = async (req, res) => {
     const { name, price, description, categoryId, weight, unit, variations } = req.body;
     const image = req.body.image || '';  // Handle image as base64 from the frontend
+    const userId = req.user._id;
 
     if (!name || !price || !description || !categoryId) {
-        return res.status(400).send({ error: 'All fields except weight and unit are required' });
+        return res.status(400).send({ error: 'Name, price, description, and category ID are required' });
     }
 
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
@@ -30,7 +31,7 @@ const createItem = async (req, res) => {
             weight,
             unit,
             variations: variations || [],
-            user: req.user._id  // Assuming the user's ID is stored in req.user._id
+            user: userId
         });
 
         await newItem.save();
@@ -61,8 +62,8 @@ const getItemsByCategory = async (req, res) => {
 // Update an item by its ID
 const updateItem = async (req, res) => {
     const { id } = req.params;
-    const { name, price, description, weight, unit, variations } = req.body;
-    const image = req.body.image || '';  // Handle image as base64 from the frontend
+    const { name, price, description, weight, unit, variations, categoryId } = req.body;
+    const image = req.body.image || ''; 
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).send({ error: 'Invalid item ID' });
@@ -81,6 +82,7 @@ const updateItem = async (req, res) => {
         item.weight = weight || item.weight;
         item.unit = unit || item.unit;
         item.variations = variations || item.variations;
+        item.category = categoryId || item.category;
 
         await item.save();
         res.status(200).send(item);
@@ -111,27 +113,9 @@ const deleteItem = async (req, res) => {
     }
 };
 
-// Get items by category ID and user ID (if needed)
-const getItemsByCategoryAndUser = async (req, res) => {
-    try {
-        const { categoryId, userId } = req.params;
-
-        if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-            return res.status(400).send({ error: 'Invalid category ID' });
-        }
-
-        const items = await ItemModel.find({ category: categoryId, user: userId });
-        res.status(200).send(items);
-    } catch (error) {
-        console.error("Failed to fetch items:", error);
-        res.status(500).send({ error: 'Error fetching items' });
-    }
-};
-
 module.exports = {
     createItem,
     getItemsByCategory,
     updateItem,
     deleteItem,
-    getItemsByCategoryAndUser
 };

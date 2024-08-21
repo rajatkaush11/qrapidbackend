@@ -12,20 +12,20 @@ const generateBestTimeToken = () => {
 
 // Function to validate the token
 const validateToken = async (restaurant) => {
-    const currentDate = new Date();
-    console.log(`Validating token for restaurant: ${restaurant.restaurantName}. Current date: ${currentDate}, Token valid until: ${restaurant.tokenValidUntil}`); // Debug log
+  const currentDate = new Date();
+  console.log(`Validating token for restaurant: ${restaurant.restaurantName}. Current date: ${currentDate}, Token valid until: ${restaurant.tokenValidUntil}`); // Debug log
 
-    if (currentDate > restaurant.tokenValidUntil) {
-        console.log(`Token expired for restaurant: ${restaurant.restaurantName}, generating a new one.`); // Debug log
-        const { token, validPeriod } = generateBestTimeToken();
-        restaurant.bestTimeToken = token;
-        restaurant.tokenValidUntil = validPeriod;
-        await restaurant.save();
-        console.log(`New token generated and saved for restaurant: ${restaurant.restaurantName}`); // Debug log
-    } else {
-        console.log(`Token for restaurant: ${restaurant.restaurantName} is still valid.`); // Debug log
-    }
-    return restaurant.bestTimeToken;
+  if (currentDate > restaurant.tokenValidUntil) {
+      console.log(`Token expired for restaurant: ${restaurant.restaurantName}, generating a new one.`); // Debug log
+      const { token, validPeriod } = generateBestTimeToken();
+      restaurant.bestTimeToken = token;
+      restaurant.tokenValidUntil = validPeriod;
+      await restaurant.save();
+      console.log(`New token generated and saved for restaurant: ${restaurant.restaurantName}`); // Debug log
+  } else {
+      console.log(`Token for restaurant: ${restaurant.restaurantName} is still valid.`); // Debug log
+  }
+  return restaurant.bestTimeToken;
 };
 
 // Create a new restaurant
